@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class ConsolePrinter {
     
-    public void printGraphOfWork(List<TimeCellLookingForJob> graphOfWork){
-        for (TimeCellLookingForJob timeCellLookingForJob : graphOfWork){
-            System.out.println(timeCellLookingForJob.getWorker().toString());
+    public void printGraphOfWork(List<TimeCellRequest> graphOfWork){
+        for (TimeCellRequest timeCellLookingForJob : graphOfWork){
+            System.out.println(timeCellLookingForJob.getWorker().getName());
         }        
     }
     

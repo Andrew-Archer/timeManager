@@ -2,6 +2,4 @@ package timemanager;
 
 
 
-public enum TypeOfWork {
-
-}
+public enum TypeOfWork {GROUP, PERSONAL, CHILDREN}

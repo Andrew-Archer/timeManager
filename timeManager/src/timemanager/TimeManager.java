@@ -2,30 +2,35 @@ package timemanager;
 
 
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TimeManager {
     //For example one hour
-    private final int minimnPeriodOfWork = 1;
+    private final int minimnPeriodOfWorkInHours = 1;
     //For example hours in a day
-    private final int subItervalLength = minimnPeriodOfWork * 8;
-    private List<TimeCellLookingForWorker> jobList;
-    private List<TimeCellLookingForJob> workersTimeWishList;
-    private List<TimeCellLookingForJob> workersTimeActualList;
+    private final int subItervalLength = minimnPeriodOfWorkInHours * 8;
+    private List<TimeCellAvailable> timeCellsAvailable = new ArrayList<>();
+    private List<TimeCellRequest> timeCellsRequest = new ArrayList<>();
+    private List<TimeCellRequest> workersTimeActualList = new ArrayList<>();
 
     /**
      * Calculates List of workers who sent queries for work. Searches for
      * workers in workersTImeWishList.
      *
+     * @param start
+     * @param end
      * @return List of workers who sent queries for work in a given period.
      */
-    private List<Worker> getListOfworkersInPeriod(int start, int end) {
+    public List<Worker> getWorkersAvailableInPeriod(LocalDateTime start, LocalDateTime end) {
         List<Worker> workersList = new ArrayList<>();
-
-        for (int i = start; i <= end; i++) {
-            if (!workersList.contains(workersTimeWishList.get(i).getWorker())) {
-                workersList.add(workersTimeWishList.get(i).getWorker());
+        
+        for (TimeCellRequest timeCellRequest : timeCellsRequest){
+            if (timeCellRequest.isIncludedIn(start.minusNanos(1), end.plusNanos(1)) &&
+                   !workersList.contains(timeCellRequest.getWorker())){
+                workersList.add(timeCellRequest.getWorker());
             }
         }
         return workersList;
@@ -33,47 +38,50 @@ public class TimeManager {
 
     /**
      *
-     * @param numberOfWorkers
+     * @param start
+     * @param end
+     * @return 
      */
-    private List<TimeCellLookingForJob> getFairGraphOfWork(int start, int end) {
-        final List<Worker> workersList = getListOfworkersInPeriod(start, end);
+    public List<TimeCellRequest> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) {
+        final List<Worker> workersList = getWorkersAvailableInPeriod(start, end);
+        
         //To hold fair graph of work
-        List<TimeCellLookingForJob> fairGraphOfWork = new ArrayList<>();
-
-        //Number of periods units per worker
-        int N = (end - start) / workersList.size();
-        //Number of work units per in subinterval per worker
-        int n = subItervalLength/workersList.size();
-        if (n < minimnPeriodOfWork) {
-            n = minimnPeriodOfWork;
-        }
+        List<TimeCellRequest> fairGraphOfWork = new ArrayList<>();
+        
+        //number of hours in the interval between start and end
+        long numberOfHours = Duration.between(start, end).toHours();
 
         //Fills up fair graph of work
-        int i = start;
-        while (i <= end) {
-            for (Worker worker : workersList){
-                for (int j = 1; j <= n; n++){
-                    fairGraphOfWork.add(new TimeCellLookingForJob(worker));
-                    i++;
-                }
+        for (LocalDateTime i = start; i.isBefore(end); i.plusHours(minimnPeriodOfWorkInHours)){
+            for (Worker worker: workersList){
+                    fairGraphOfWork.add(new TimeCellRequest(
+                        start,
+                        start.plusHours(minimnPeriodOfWorkInHours),
+                        LocalDateTime.now(),
+                        worker));
             }
         }
         return fairGraphOfWork;
     }
+    
+    public List<TimeCellRequest> getActualGraphOfWork(LocalDateTime start, LocalDateTime end){
+        List<TimeCellRequest> fairGraphOfWork = getFairGraphOfWork(start, end);
+        return null;
+    }
 
-    public void addNewJob(TimeCellLookingForWorker newJob) {
+    public void addTimeCellAvailable(TimeCellAvailable newJob) {
+        //TODO
+    }
+
+    public void removeTimeCellAvailable(TimeCellAvailable aJob) {
 
     }
 
-    public void removeJob(TimeCellLookingForWorker aJob) {
-
+    public void addTimeCellRequest(TimeCellRequest timeCellRequest) {
+        timeCellsRequest.add(timeCellRequest);
     }
 
-    public void addNewTimeCellLookingForJob(TimeCellLookingForJob timeCellLookingForJob) {
-
-    }
-
-    public void removeNewTimeCellLookingForJob(TimeCellLookingForJob timeCellLookingForJob) {
+    public void removeTimeCellRequest(TimeCellRequest timeCellRequest) {
 
     }
 
