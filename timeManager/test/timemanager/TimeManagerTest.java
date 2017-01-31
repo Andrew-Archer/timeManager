@@ -5,58 +5,121 @@
  */
 package timemanager;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import junit.framework.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static timemanager.TypeOfWork.*;
 
 /**
  *
  * @author razan
  */
 public class TimeManagerTest {
+    
+    public TimeManagerTest() {
+    }
 
     /**
-     * Test of addNewJob method, of class TimeManager.
+     * Test of getWorkersAvailableInPeriod method, of class TimeManager.
      */
     @Test
-    public void testGetListOfworkersInPeriod() {
-        TimeManager TM = new TimeManager();
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("Jack")));
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("Joe")));
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("John")));
-
-        assertTrue(TM.getListOfworkersInPeriod(0, 2).size() == 3);
-
-        assertTrue(TM.getListOfworkersInPeriod(0, 2).size() == 3);
-        assertTrue(TM.getListOfworkersInPeriod(0, 1).size() == 2);
-        assertTrue(TM.getListOfworkersInPeriod(1, 2).size() == 2);
-        assertTrue(TM.getListOfworkersInPeriod(0, 0).size() == 1);
-        assertTrue(TM.getListOfworkersInPeriod(2, 2).size() == 1);
+    public void testGetWorkersAvailableInPeriod() {
+        TimeManager tm = new TimeManager();
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:15:00"),
+            LocalDateTime.parse("2007-12-03T10:16:00"),
+            LocalDateTime.now(),
+            new Worker("Jack", GROUP)));
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:16:00"),
+            LocalDateTime.parse("2007-12-03T10:17:00"),
+            LocalDateTime.now(),
+            new Worker("Jane", GROUP)));
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:17:00"),
+            LocalDateTime.parse("2007-12-03T10:18:00"),
+            LocalDateTime.now(),
+            new Worker("John", GROUP)));
+        
+        assertTrue(tm.getWorkersAvailableInPeriod(
+                LocalDateTime.parse("2007-12-03T10:15:00"),
+                LocalDateTime.parse("2007-12-03T10:18:00")).size() == 3);
     }
 
+    /**
+     * Test of getFairGraphOfWork method, of class TimeManager.
+     */
     @Test
     public void testGetFairGraphOfWork() {
-        TimeManager TM = new TimeManager();
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("Jack")));
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("Joe")));
-        TM.addNewTimeCellLookingForJob(new TimeCellLookingForJob(new Worker("John")));
-
-        List<TimeCellLookingForJob> graphOfWork = TM.getFairGraphOfWork(0, 5);
-        //assertTrue(graphOfWork.size() == 6);
-
-        List<Worker> workersList = TM.getListOfworkersInPeriod(0, 5);
-
-        for (int i = 0; i < workersList.size(); i++) {
-            System.out.print(i);
-            for (int j = i * 2; j <= 1 + i * 2; j++) {
-                System.out.print(j);
-                assertTrue(workersList.get(i).getName().equals((graphOfWork.get(j).getWorker().getName())));
-            }
-            System.out.println();
-        }
-
+            TimeManager tm = new TimeManager();
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:15:00"),
+            LocalDateTime.parse("2007-12-03T10:16:00"),
+            LocalDateTime.now(),
+            new Worker("Jack", GROUP)));
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:16:00"),
+            LocalDateTime.parse("2007-12-03T10:17:00"),
+            LocalDateTime.now(),
+            new Worker("Jane", GROUP)));
+        
+        tm.addTimeCellRequest(new TimeCellRequest(
+            LocalDateTime.parse("2007-12-03T10:17:00"),
+            LocalDateTime.parse("2007-12-03T10:18:00"),
+            LocalDateTime.now(),
+            new Worker("John", GROUP)));
+        
+        List<TimeCellRequest> TimeCellRequests = tm.getFairGraphOfWork(
+                LocalDateTime.MAX,
+                LocalDateTime.MIN);
     }
 
+    /**
+     * Test of getActualGraphOfWork method, of class TimeManager.
+     */
+    @Test
+    public void testGetActualGraphOfWork() {
+    }
+
+    /**
+     * Test of addTimeCellAvailable method, of class TimeManager.
+     */
+    @Test
+    public void testAddTimeCellAvailable() {
+    }
+
+    /**
+     * Test of removeTimeCellAvailable method, of class TimeManager.
+     */
+    @Test
+    public void testRemoveTimeCellAvailable() {
+    }
+
+    /**
+     * Test of addTimeCellRequest method, of class TimeManager.
+     */
+    @Test
+    public void testAddTimeCellRequest() {
+    }
+
+    /**
+     * Test of removeTimeCellRequest method, of class TimeManager.
+     */
+    @Test
+    public void testRemoveTimeCellRequest() {
+    }
+
+    /**
+     * Test of organizeTimeCells method, of class TimeManager.
+     */
+    @Test
+    public void testOrganizeTimeCells() {
+    }
+    
 }
