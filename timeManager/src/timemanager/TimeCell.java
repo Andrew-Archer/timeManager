@@ -1,6 +1,8 @@
 package timemanager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TimeCell {
 
@@ -21,6 +23,18 @@ public class TimeCell {
         this.start = start;
         this.end = end;
         this.creationTime = creationTime;
+    }
+    
+    public List<TimeCell> getOverlapingTimeCells(List<TimeCell> listOfTimeCells){
+        List<TimeCell> result = new ArrayList<>();
+        
+        for (TimeCell timeCell : listOfTimeCells){
+            if (isOverlaping(timeCell)){
+               result.add(timeCell) ;
+            }
+        }
+        
+        return result;
     }
 
     public Boolean fit(TimeCell aTimeCell) {
@@ -59,5 +73,9 @@ public class TimeCell {
      */
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
+    }
+
+    private boolean isOverlaping(TimeCell timeCell) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
