@@ -12,7 +12,9 @@ public class TimeCellAvailable extends TimeCell {
             LocalDateTime end,
             LocalDateTime creationTime,
             Manager creator,
-            TypeOfWork typeOfWork){
+            TypeOfWork typeOfWork) throws
+                                            EndBeforeStartException,
+                                            ZeroLengthException{
         super(start, end, creationTime);
         this.creator = creator;
         this.typeOfWork = typeOfWork;
@@ -21,7 +23,9 @@ public class TimeCellAvailable extends TimeCell {
         public TimeCellAvailable(
             LocalDateTime start,
             LocalDateTime end,
-            Manager creator){
+            Manager creator) throws
+                                        EndBeforeStartException,
+                                        ZeroLengthException{
         super(start, end);
         this.creator = creator;
     }

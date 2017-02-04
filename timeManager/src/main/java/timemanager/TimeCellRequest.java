@@ -9,7 +9,9 @@ public class TimeCellRequest extends TimeCell {
                 LocalDateTime start,
                 LocalDateTime end,
                 LocalDateTime creationTime,
-                Worker aWorker){
+                Worker aWorker) throws 
+                                        EndBeforeStartException,
+                                        ZeroLengthException{
             super(start, end, creationTime);
             worker = aWorker;
         }
@@ -17,7 +19,9 @@ public class TimeCellRequest extends TimeCell {
         public TimeCellRequest(
                 LocalDateTime start,
                 LocalDateTime end,
-                Worker aWorker){
+                Worker aWorker) throws
+                                        EndBeforeStartException,
+                                        ZeroLengthException{
             super(start, end);
             worker = aWorker;
         }
