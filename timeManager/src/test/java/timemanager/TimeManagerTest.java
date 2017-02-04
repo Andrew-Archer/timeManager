@@ -24,7 +24,9 @@ public class TimeManagerTest {
      * Test of getWorkersAvailableInPeriod method, of class TimeManager.
      */
     @Test
-    public void testGetWorkersAvailableInPeriod() {
+    public void testGetWorkersAvailableInPeriod() throws 
+                                                    EndBeforeStartException,
+                                                    ZeroLengthException {
         TimeManager tm = new TimeManager();
         
         tm.addTimeCellRequest(new TimeCellRequest(
@@ -54,7 +56,9 @@ public class TimeManagerTest {
      * Test of getFairGraphOfWork method, of class TimeManager.
      */
     @Test
-    public void testGetFairGraphOfWork() {
+    public void testGetFairGraphOfWork() throws
+                                            EndBeforeStartException,
+                                            ZeroLengthException {
             TimeManager tm = new TimeManager();
         
         tm.addTimeCellRequest(new TimeCellRequest(

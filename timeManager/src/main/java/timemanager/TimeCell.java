@@ -86,7 +86,7 @@ public class TimeCell {
         this.creationTime = creationTime;
     }
 
-    private boolean isOverlaping(TimeCell timeCell) {
+    public boolean isOverlaping(TimeCell timeCell) {
         return (
                 this.getStart().plusNanos(1).isAfter(timeCell.getEnd())
                 || 

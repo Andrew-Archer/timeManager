@@ -6,6 +6,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TimeManager {
     //For example one hour
@@ -54,11 +56,17 @@ public class TimeManager {
         //Fills up fair graph of work
         for (LocalDateTime i = start; i.isBefore(end); i.plusHours(minimnPeriodOfWorkInHours)){
             for (Worker worker: workersList){
+                try {
                     fairGraphOfWork.add(new TimeCellRequest(
-                        start,
-                        start.plusHours(minimnPeriodOfWorkInHours),
-                        LocalDateTime.now(),
-                        worker));
+                            start,
+                            start.plusHours(minimnPeriodOfWorkInHours),
+                            LocalDateTime.now(),
+                            worker));
+                } catch (EndBeforeStartException ex) {
+                    Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ZeroLengthException ex) {
+                    Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         return fairGraphOfWork;
