@@ -12,17 +12,28 @@ public class TimeCell {
 
     public TimeCell(
             LocalDateTime start,
-            LocalDateTime end) {
+            LocalDateTime end) throws 
+                                        EndBeforeStartException,
+                                        ZeroLengthException{
         this(start, end, LocalDateTime.now());
     }
 
     public TimeCell(
             LocalDateTime start,
             LocalDateTime end,
-            LocalDateTime creationTime) {
-        this.start = start;
-        this.end = end;
-        this.creationTime = creationTime;
+            LocalDateTime creationTime) throws
+                                                EndBeforeStartException,
+                                                ZeroLengthException {
+        
+        if (end.isBefore(start)){
+            throw new EndBeforeStartException();
+        }else if (end.equals(start)){
+            throw new ZeroLengthException(); 
+        }else{
+            this.start = start;
+            this.end = end;
+            this.creationTime = creationTime;
+        }
     }
     
     public List<TimeCell> getOverlapingTimeCells(List<TimeCell> listOfTimeCells){
@@ -76,6 +87,10 @@ public class TimeCell {
     }
 
     private boolean isOverlaping(TimeCell timeCell) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (
+                this.getStart().plusNanos(1).isAfter(timeCell.getEnd())
+                || 
+                this.getEnd().minusNanos(1).isBefore(timeCell.getStart())
+                );
     }
 }
