@@ -19,6 +19,40 @@ public class TimeManagerTest {
     
     public TimeManagerTest() {
     }
+    
+    /**
+     * Try to create TimeCell with the end equals to the start.
+     * It passes the test if ZeroLengthException is trown.
+     */
+    @Test
+    public void testZeroLengthException(){
+        boolean result = false;
+        try{
+            new TimeCell(LocalDateTime.now(), LocalDateTime.now());
+        }catch(ZeroLengthException ex){
+            result = true;
+        }catch(EndBeforeStartException ex){
+            result = false;
+        }
+        assertTrue(result);
+    }
+    
+    /**
+     * Try to create TimeCell with the end before the start.
+     * It passes the test if EndBeforeStartException is trown.
+     */
+    @Test
+    public void testEndBeforeStartException(){
+        boolean result = false;
+        try{
+            new TimeCell(LocalDateTime.now().plusNanos(1), LocalDateTime.now());
+        }catch(ZeroLengthException ex){
+            result = false;
+        }catch(EndBeforeStartException ex){
+            result = true;
+        }
+        assertTrue(result);
+    }
 
     /**
      * Test of getWorkersAvailableInPeriod method, of class TimeManager.
@@ -83,47 +117,35 @@ public class TimeManagerTest {
                 LocalDateTime.MAX,
                 LocalDateTime.MIN);
     }
+/*
 
-    /**
-     * Test of getActualGraphOfWork method, of class TimeManager.
-     */
     @Test
     public void testGetActualGraphOfWork() {
     }
 
-    /**
-     * Test of addTimeCellAvailable method, of class TimeManager.
-     */
+    
+    
     @Test
     public void testAddTimeCellAvailable() {
     }
 
-    /**
-     * Test of removeTimeCellAvailable method, of class TimeManager.
-     */
-    @Test
+    
     public void testRemoveTimeCellAvailable() {
     }
 
-    /**
-     * Test of addTimeCellRequest method, of class TimeManager.
-     */
+  
     @Test
     public void testAddTimeCellRequest() {
     }
 
-    /**
-     * Test of removeTimeCellRequest method, of class TimeManager.
-     */
+   
     @Test
     public void testRemoveTimeCellRequest() {
     }
 
-    /**
-     * Test of organizeTimeCells method, of class TimeManager.
-     */
+    
     @Test
     public void testOrganizeTimeCells() {
     }
-    
+    */
 }
