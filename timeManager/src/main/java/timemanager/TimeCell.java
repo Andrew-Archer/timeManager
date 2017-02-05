@@ -36,6 +36,31 @@ public class TimeCell {
         }
     }
     
+    /**
+     * There are only 9 types of overlaping is available,
+     * since there are no zero length TimeCells.
+     * @param aTimeCell
+     * @return 
+     */
+    
+    public int getOverlapingType(TimeCell aTimeCell){
+        int startType = 30;
+        int endType = 3;
+        
+        if (getStart().isBefore(aTimeCell.getStart())){
+            startType = 10;
+        }else if (getStart().isAfter(aTimeCell.getStart())){
+            startType = 20;
+        }
+                
+        if (getEnd().isBefore(aTimeCell.getEnd())){
+            endType = 1;
+        }else if (getEnd().isAfter(aTimeCell.getEnd())){
+            startType = 2;
+        }
+        
+        return startType + endType;
+    }
     public List<TimeCell> getOverlapingTimeCells(List<TimeCell> listOfTimeCells){
         List<TimeCell> result = new ArrayList<>();
         
@@ -54,6 +79,14 @@ public class TimeCell {
     
     public Boolean isIncludedIn(LocalDateTime start, LocalDateTime end) {
         return getStart().isAfter(start) && getEnd().isBefore(end);
+    }
+    
+        public boolean isOverlaping(TimeCell timeCell) {
+        return (
+                this.getStart().plusNanos(1).isAfter(timeCell.getEnd())
+                || 
+                this.getEnd().minusNanos(1).isBefore(timeCell.getStart())
+                );
     }
 
     public LocalDateTime getStart() {
@@ -84,13 +117,5 @@ public class TimeCell {
      */
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
-    }
-
-    public boolean isOverlaping(TimeCell timeCell) {
-        return (
-                this.getStart().plusNanos(1).isAfter(timeCell.getEnd())
-                || 
-                this.getEnd().minusNanos(1).isBefore(timeCell.getStart())
-                );
     }
 }

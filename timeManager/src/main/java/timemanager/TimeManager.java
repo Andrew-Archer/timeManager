@@ -16,7 +16,7 @@ public class TimeManager {
     private final int subItervalLength = minimnPeriodOfWorkInHours * 8;
     private List<TimeCellAvailable> timeCellsAvailable = new ArrayList<>();
     private List<TimeCellRequest> timeCellsRequest = new ArrayList<>();
-    private List<TimeCellRequest> workersTimeActualList = new ArrayList<>();
+    private List<TimeCell> actualWorkGraph = new ArrayList<>();
 
     /**
      * Calculates List of workers who sent queries for work. Searches for
@@ -38,17 +38,32 @@ public class TimeManager {
         return workersList;
     }
 
+    public void addTimeCellToActualWorkGraph(TimeCell aTimeCell){
+        List<TimeCell> originalList = new ArrayList<>();
+        List<TimeCell> listToPushIntoActualGraph = new ArrayList<>();
+        if (actualWorkGraph.isEmpty()){
+            actualWorkGraph = getFairGraphOfWork(LocalDateTime.MAX, LocalDateTime.MIN);
+        }
+        
+        originalList = aTimeCell.getOverlapingTimeCells(actualWorkGraph);
+        
+        for (TimeCell timeCell : originalList){
+            
+        }
+        
+    }
+    
     /**
      *
      * @param start
      * @param end
      * @return 
      */
-    public List<TimeCellRequest> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) {
+    public List<TimeCell> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) {
         final List<Worker> workersList = getWorkersAvailableInPeriod(start, end);
         
         //To hold fair graph of work
-        List<TimeCellRequest> fairGraphOfWork = new ArrayList<>();
+        List<TimeCell> fairGraphOfWork = new ArrayList<>();
         
         //number of hours in the interval between start and end
         long numberOfHours = Duration.between(start, end).toHours();
@@ -72,8 +87,8 @@ public class TimeManager {
         return fairGraphOfWork;
     }
     
-    public List<TimeCellRequest> getActualGraphOfWork(LocalDateTime start, LocalDateTime end){
-        List<TimeCellRequest> fairGraphOfWork = getFairGraphOfWork(start, end);
+    public List<TimeCell> getActualGraphOfWork(LocalDateTime start, LocalDateTime end){
+        List<TimeCell> fairGraphOfWork = getFairGraphOfWork(start, end);
         return null;
     }
 

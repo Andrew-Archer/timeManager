@@ -113,7 +113,7 @@ public class TimeManagerTest {
             LocalDateTime.now(),
             new Worker("John", GROUP)));
         
-        List<TimeCellRequest> TimeCellRequests = tm.getFairGraphOfWork(
+        List<TimeCell> TimeCellRequests = tm.getFairGraphOfWork(
                 LocalDateTime.MAX,
                 LocalDateTime.MIN);
     }
