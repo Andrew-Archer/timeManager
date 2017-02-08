@@ -9,6 +9,22 @@ public class TimeCell {
     private LocalDateTime start;
     private LocalDateTime end;
     private LocalDateTime creationTime;
+    
+    public TimeCell(
+            TimeCell original,
+            LocalDateTime newEnd) throws 
+                                            EndBeforeStartException,
+                                            ZeroLengthException{
+        this(original.getStart(), newEnd, original.getCreationTime());
+    }
+    
+    public TimeCell(
+            LocalDateTime newStart,
+            TimeCell original) throws
+            EndBeforeStartException,
+            ZeroLengthException {
+        this(newStart, original.getEnd(), original.getCreationTime());
+    }
 
     public TimeCell(
             LocalDateTime start,

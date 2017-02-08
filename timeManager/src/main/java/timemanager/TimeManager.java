@@ -53,6 +53,40 @@ public class TimeManager {
         
     }
     
+    public void splitTimeCells(TimeCell modifiedCell, TimeCell insertionCell) throws EndBeforeStartException, ZeroLengthException {
+        List<TimeCell> splitedModifiedCell = new ArrayList<>();
+        List<TimeCell> splitedInsertionCell = new ArrayList<>();
+
+        switch (insertionCell.getOverlapingType(modifiedCell)) {
+            case 11:
+                splitedModifiedCell.add(new TimeCell(
+                                                    modifiedCell,
+                                                    insertionCell.getEnd()
+                                                    )
+                                        );
+                splitedModifiedCell.add(new TimeCell(
+                                                    insertionCell.getEnd(),
+                                                    modifiedCell));
+                break;
+            case 13:
+                break;
+            case 12:
+                break;
+            case 21:
+                break;
+            case 23:
+                break;
+            case 22:
+                break;
+            case 31:
+                break;
+            case 33:
+                break;
+            case 32:
+                break;
+
+        }
+    }
     /**
      *
      * @param start
