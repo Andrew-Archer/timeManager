@@ -34,6 +34,14 @@ public class TimeCell {
         this(start, end, LocalDateTime.now());
     }
 
+    public TimeCell(TimeCell aTimeCell) throws 
+                                            EndBeforeStartException,
+                                            ZeroLengthException{
+        this(
+                aTimeCell.getStart(),
+                aTimeCell.getEnd(),
+                aTimeCell.getCreationTime());
+    }
     public TimeCell(
             LocalDateTime start,
             LocalDateTime end,
@@ -49,6 +57,52 @@ public class TimeCell {
             this.start = start;
             this.end = end;
             this.creationTime = creationTime;
+        }
+    }
+    
+    public void splitTimeCells(TimeCell cellToSplit) throws
+                                                        EndBeforeStartException,
+                                                        ZeroLengthException {
+        List<TimeCell> splittedCell = new ArrayList<>();
+        List<TimeCell> thisSplittedCell = new ArrayList<>();
+
+        switch (getOverlapingType(cellToSplit)) {
+            case 11:
+                splittedCell.add(new TimeCell(cellToSplit, getEnd()));
+                splittedCell.add(new TimeCell(getEnd(), cellToSplit));
+                
+                thisSplittedCell.add(new TimeCell(this, cellToSplit.getStart()));
+                thisSplittedCell.add(new TimeCell(cellToSplit.getStart(), this));
+                break;
+            case 13:
+                splittedCell.add(new TimeCell(cellToSplit));
+                
+                thisSplittedCell.add(new TimeCell(this, cellToSplit.getStart()));
+                thisSplittedCell.add(new TimeCell(cellToSplit.getStart(), this));
+                break;
+            case 12:
+                splittedCell.add(new TimeCell(cellToSplit));
+                
+                thisSplittedCell.add(new TimeCell(this, cellToSplit.getStart()));
+                thisSplittedCell.add(new TimeCell(
+                                                    cellToSplit.getStart(),
+                                                    cellToSplit.getEnd(),
+                                                    getCreationTime()));
+                thisSplittedCell.add(new TimeCell(cellToSplit.getEnd(),this));
+                break;
+            case 21:
+                break;
+            case 23:
+                break;
+            case 22:
+                break;
+            case 31:
+                break;
+            case 33:
+                break;
+            case 32:
+                break;
+
         }
     }
     
