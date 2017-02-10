@@ -60,7 +60,7 @@ public class TimeCell {
         }
     }
     
-    public void splitTimeCells(TimeCell cellToSplit) throws
+      public void splitTimeCells(TimeCell cellToSplit) throws
                                                         EndBeforeStartException,
                                                         ZeroLengthException {
         List<TimeCell> splittedCell = new ArrayList<>();
@@ -91,18 +91,49 @@ public class TimeCell {
                 thisSplittedCell.add(new TimeCell(cellToSplit.getEnd(),this));
                 break;
             case 21:
+            	splittedCell.add(new TimeCell(cellToSplit, getStart()));
+            	splittedCell.add(new TimeCell(
+            									getStart(),
+            									getEnd(),
+            									cellToSplit.getCreationTime()));
+            	splittedCell.add(new TimeCell(getEnd(), cellToSplit));
+            	
+            	thisSplittedCell.add(new TimeCell(this));
                 break;
             case 23:
+            	splittedCell.add(new TimeCell(cellToSplit, getStart()));
+            	splittedCell.add(new TimeCell(
+            									getStart(),
+            									getEnd(),
+            									cellToSplit.getCreationTime()));
+            	thisSplittedCell.add(new TimeCell(this));
                 break;
             case 22:
+            	splittedCell.add(new TimeCell(cellToSplit, getStart()));
+            	splittedCell.add(new TimeCell(getStart(), cellToSplit));
+            	thisSplittedCell.add(new TimeCell(
+            										getStart(),
+            										cellToSplit.getEnd(),
+            										getCreationTime()));
+            	thisSplittedCell.add(new TimeCell(cellToSplit.getEnd(), this));
                 break;
             case 31:
+            	splittedCell.add(new TimeCell(cellToSplit, getEnd()));
+            	splittedCell.add(new TimeCell(getEnd(), cellToSplit));
+            	
+            	thisSplittedCell.add(new TimeCell(this));
                 break;
             case 33:
+            	splittedCell.add(new TimeCell(cellToSplit));
+            	
+            	thisSplittedCell.add(new TimeCell(this));
                 break;
             case 32:
+            	splittedCell.add(new TimeCell(cellToSplit));
+            	
+            	thisSplittedCell.add(new TimeCell(this, cellToSplit.getEnd()));
+            	thisSplittedCell.add(new TimeCell(cellToSplit.getEnd(), this));
                 break;
-
         }
     }
     
