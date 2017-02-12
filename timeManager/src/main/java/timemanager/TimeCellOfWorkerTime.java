@@ -12,14 +12,14 @@ public class TimeCellOfWorkerTime extends TimeCell {
     public TypeOfWork getTypeOfWork() {
         return typeOfWork;
     }
-    
+
     @Override
-    public TimeCellOfWorkerTime clone() throws CloneNotSupportedException{
+    public TimeCellOfWorkerTime clone() throws CloneNotSupportedException {
         TimeCellOfWorkerTime clone;
-        clone = (TimeCellOfWorkerTime)super.clone();
+        clone = (TimeCellOfWorkerTime) super.clone();
         clone.worker = worker.clone();
         clone.typeOfWork = typeOfWork;
-        
+
         return clone;
     }
 
@@ -29,119 +29,177 @@ public class TimeCellOfWorkerTime extends TimeCell {
     public void setTypeOfWork(TypeOfWork typeOfWork) {
         this.typeOfWork = typeOfWork;
     }
-	private Worker worker;
-        private TypeOfWork typeOfWork;
-        
-        public TimeCellOfWorkerTime(
-                LocalDateTime start,
-                LocalDateTime end,
-                LocalDateTime creationTime,
-                Worker aWorker,
-                TypeOfWork aTypeOfWork) throws 
-                                        EndBeforeStartException,
-                                        ZeroLengthException{
-            super(start, end, creationTime);
-            worker = aWorker;
-            typeOfWork = aTypeOfWork;
-        }
+    private Worker worker;
+    private TypeOfWork typeOfWork;
+
+    public TimeCellOfWorkerTime(
+            LocalDateTime start,
+            LocalDateTime end,
+            LocalDateTime creationTime,
+            Worker aWorker,
+            TypeOfWork aTypeOfWork) throws
+            EndBeforeStartException,
+            ZeroLengthException,
+            CloneNotSupportedException {
+        super(start, end, creationTime);
+        worker = aWorker.clone();
+        typeOfWork = aTypeOfWork;
+    }
+
+    public TimeCellOfWorkerTime(
+            TimeCellOfWorkerTime aTimeCellOfWorkerTime,
+            LocalDateTime end) throws
+            EndBeforeStartException,
+            ZeroLengthException,
+            CloneNotSupportedException {
+        this(
+                aTimeCellOfWorkerTime.getStart(),
+                end,
+                aTimeCellOfWorkerTime.getCreationTime(),
+                aTimeCellOfWorkerTime.getWorker(),
+                aTimeCellOfWorkerTime.getTypeOfWork());
+    }
+
+    public TimeCellOfWorkerTime(
+            LocalDateTime start,
+            TimeCellOfWorkerTime aTimeCellOfWorkerTime) throws
+            EndBeforeStartException,
+            ZeroLengthException,
+            CloneNotSupportedException {
+        this(
+                start,
+                aTimeCellOfWorkerTime.getEnd(),
+                aTimeCellOfWorkerTime.getCreationTime(),
+                aTimeCellOfWorkerTime.getWorker(),
+                aTimeCellOfWorkerTime.getTypeOfWork());
+    }
 
     /**
      *
      * @param timeCellOfJob
+     * @throws timemanager.EndBeforeStartException
+     * @throws timemanager.ZeroLengthException
+     * @throws java.lang.CloneNotSupportedException
      */
-        public void splitTimeCells(TimeCellOfJob timeCellOfJob) throws EndBeforeStartException, ZeroLengthException{
-        List<TimeCell> splittedCell = new ArrayList<>();
-        List<TimeCell> thisSplittedCell = new ArrayList<>();
+    public void splitTimeCells(TimeCellOfJob timeCellOfJob) throws
+            EndBeforeStartException,
+            ZeroLengthException,
+            CloneNotSupportedException {
+        List<TimeCell> jobList = new ArrayList<>();
+        List<TimeCell> workerTimeList = new ArrayList<>();
 
         switch (getOverlapingType(timeCellOfJob)) {
             case 11:
-                splittedCell.add(new TimeCellOfJob(timeCellOfJob, getEnd()));
-                splittedCell.add(new TimeCell(getEnd(), timeCellOfJob));
-                
-                thisSplittedCell.add(new TimeCell(this, timeCellOfJob.getStart()));
-                thisSplittedCell.add(new TimeCell(timeCellOfJob.getStart(), this));
+                jobList.add(new TimeCellOfJob(timeCellOfJob, getEnd()));
+                jobList.add(new TimeCellOfJob(getEnd(), timeCellOfJob));
+
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        this,
+                        timeCellOfJob.getStart()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getStart(),
+                        this));
                 break;
             case 13:
-                splittedCell.add(new TimeCell(timeCellOfJob));
-                
-                thisSplittedCell.add(new TimeCell(this, timeCellOfJob.getStart()));
-                thisSplittedCell.add(new TimeCell(timeCellOfJob.getStart(), this));
+                jobList.add(timeCellOfJob.clone());
+
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        this,
+                        timeCellOfJob.getStart()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getStart(),
+                        this));
                 break;
             case 12:
-                splittedCell.add(new TimeCell(timeCellOfJob));
-                
-                thisSplittedCell.add(new TimeCell(this, timeCellOfJob.getStart()));
-                thisSplittedCell.add(new TimeCell(
-                                                    timeCellOfJob.getStart(),
-                                                    timeCellOfJob.getEnd(),
-                                                    getCreationTime()));
-                thisSplittedCell.add(new TimeCell(timeCellOfJob.getEnd(),this));
+                jobList.add(timeCellOfJob.clone());
+
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        this,
+                        timeCellOfJob.getStart()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getStart(),
+                        timeCellOfJob.getEnd(),
+                        getCreationTime(),
+                        getWorker(),
+                        getTypeOfWork()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getEnd(),
+                        this));
                 break;
             case 21:
-            	splittedCell.add(new TimeCell(timeCellOfJob, getStart()));
-            	splittedCell.add(new TimeCell(
-            									getStart(),
-            									getEnd(),
-            									timeCellOfJob.getCreationTime()));
-            	splittedCell.add(new TimeCell(getEnd(), timeCellOfJob));
-            	
-            	thisSplittedCell.add(new TimeCell(this));
+                jobList.add(new TimeCellOfJob(timeCellOfJob, getStart()));
+                jobList.add(new TimeCellOfJob(
+                        getStart(),
+                        getEnd(),
+                        timeCellOfJob.getCreationTime(),
+                        timeCellOfJob.getCreator(),
+                        timeCellOfJob.getTypeOfWork(),
+                        timeCellOfJob.getAssinedTo()));
+                jobList.add(new TimeCellOfJob(getEnd(), timeCellOfJob));
+
+                workerTimeList.add(this.clone());
                 break;
             case 23:
-            	splittedCell.add(new TimeCell(timeCellOfJob, getStart()));
-            	splittedCell.add(new TimeCell(
-            									getStart(),
-            									getEnd(),
-            									timeCellOfJob.getCreationTime()));
-            	thisSplittedCell.add(new TimeCell(this));
+                jobList.add(new TimeCellOfJob(timeCellOfJob, getStart()));
+                jobList.add(new TimeCellOfJob(
+                        getStart(),
+                        getEnd(),
+                        timeCellOfJob.getCreationTime(),
+                        timeCellOfJob.getCreator(),
+                        timeCellOfJob.getTypeOfWork(),
+                        timeCellOfJob.getAssinedTo()));
+                workerTimeList.add(this.clone());
                 break;
             case 22:
-            	splittedCell.add(new TimeCell(timeCellOfJob, getStart()));
-            	splittedCell.add(new TimeCell(getStart(), timeCellOfJob));
-            	thisSplittedCell.add(new TimeCell(
-            										getStart(),
-            										timeCellOfJob.getEnd(),
-            										getCreationTime()));
-            	thisSplittedCell.add(new TimeCell(timeCellOfJob.getEnd(), this));
+                jobList.add(new TimeCellOfJob(timeCellOfJob, getStart()));
+                jobList.add(new TimeCellOfJob(getStart(), timeCellOfJob));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        this,
+                        timeCellOfJob.getEnd()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getEnd(),
+                        this));
                 break;
             case 31:
-            	splittedCell.add(new TimeCell(timeCellOfJob, getEnd()));
-            	splittedCell.add(new TimeCell(getEnd(), timeCellOfJob));
-            	
-            	thisSplittedCell.add(new TimeCell(this));
+                jobList.add(new TimeCellOfJob(timeCellOfJob, getEnd()));
+                jobList.add(new TimeCellOfJob(getEnd(), timeCellOfJob));
+
+                workerTimeList.add(this.clone());
                 break;
             case 33:
-            	splittedCell.add(new TimeCell(timeCellOfJob));
-            	
-            	thisSplittedCell.add(new TimeCell(this));
+                jobList.add(timeCellOfJob.clone());
+
+                workerTimeList.add(this.clone());
                 break;
             case 32:
-            	splittedCell.add(new TimeCell(timeCellOfJob));
-            	
-            	thisSplittedCell.add(new TimeCell(this, timeCellOfJob.getEnd()));
-            	thisSplittedCell.add(new TimeCell(timeCellOfJob.getEnd(), this));
+                jobList.add(timeCellOfJob.clone());
+
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        this,
+                        timeCellOfJob.getEnd()));
+                workerTimeList.add(new TimeCellOfWorkerTime(
+                        timeCellOfJob.getEnd(),
+                        this));
                 break;
         }
     }
-        
-        public TimeCellOfWorkerTime(
-                LocalDateTime start,
-                LocalDateTime end,
-                Worker aWorker) throws
-                                        EndBeforeStartException,
-                                        ZeroLengthException{
-            super(start, end);
-            worker = aWorker;
-            typeOfWork = TypeOfWork.ANY;
-        }
 
+    public TimeCellOfWorkerTime(
+            LocalDateTime start,
+            LocalDateTime end,
+            Worker aWorker) throws
+            EndBeforeStartException,
+            ZeroLengthException {
+        super(start, end);
+        worker = aWorker;
+        typeOfWork = TypeOfWork.ANY;
+    }
 
+    public Worker getWorker() {
+        return worker;
+    }
 
-	public Worker getWorker() {
-		return worker;
-	}
-
-	public void setWorker(Worker worker) {
-		this.worker = worker;
-	}
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
 }

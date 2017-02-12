@@ -23,7 +23,7 @@ public class TimeCellOfJob extends TimeCell {
     private TypeOfWork typeOfWork;
    
     @Override
-    public Object clone() throws CloneNotSupportedException{
+    public TimeCellOfJob clone() throws CloneNotSupportedException{
         TimeCellOfJob clone = (TimeCellOfJob) super.clone();
         clone.typeOfWork = typeOfWork;
         clone.assinedTo = assinedTo.clone();
@@ -48,21 +48,49 @@ public class TimeCellOfJob extends TimeCell {
         public TimeCellOfJob(
             LocalDateTime start,
             LocalDateTime end,
-            Manager creator) throws
+            LocalDateTime aCreationTime,
+            Manager aCreator,
+            TypeOfWork aTypeOfWork,
+            Worker assinedTo) throws
                                         EndBeforeStartException,
-                                        ZeroLengthException{
-        super(start, end);
-        this.creator = creator;
+                                        ZeroLengthException,
+                                        CloneNotSupportedException{
+        super(start, end, aCreationTime);
+        creator = aCreator.clone();
+        typeOfWork = aTypeOfWork;
+        this.assinedTo = assinedTo.clone();
+        
     }
+        
         public TimeCellOfJob(
                 TimeCellOfJob aTimeCell,
                 LocalDateTime anEnd) throws 
                                             EndBeforeStartException,
-                                            ZeroLengthException{
-            super(aTimeCell, anEnd);
-            assinedTo = aTimeCell.getAssinedTo();
-            
+                                            ZeroLengthException,
+                                            CloneNotSupportedException{
+            this(
+                    aTimeCell.getStart(),
+                    anEnd,
+                    aTimeCell.getCreationTime(),
+                    aTimeCell.getCreator(),
+                    aTimeCell.getTypeOfWork(),
+                    aTimeCell.getAssinedTo());  
         }
+        
+                public TimeCellOfJob(
+                LocalDateTime aStart, TimeCellOfJob aTimeCell) throws 
+                                            EndBeforeStartException,
+                                            ZeroLengthException,
+                                            CloneNotSupportedException{
+            this(
+                    aStart,
+                    aTimeCell.getEnd(),
+                    aTimeCell.getCreationTime(),
+                    aTimeCell.getCreator(),
+                    aTimeCell.getTypeOfWork(),
+                    aTimeCell.getAssinedTo());  
+        }
+
 
     public Manager getCreator() {
         return creator;

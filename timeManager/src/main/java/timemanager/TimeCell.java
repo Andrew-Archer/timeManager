@@ -72,6 +72,7 @@ public class TimeCell implements Cloneable {
         }
     }
     
+    @Deprecated
       public void splitTimeCells(TimeCell cellToSplit) throws
                                                         EndBeforeStartException,
                                                         ZeroLengthException {

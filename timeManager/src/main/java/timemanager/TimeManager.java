@@ -16,7 +16,7 @@ public class TimeManager {
     private final int subItervalLength = minimnPeriodOfWorkInHours * 8;
     private List<TimeCellOfJob> timeCellsAvailable = new ArrayList<>();
     private List<TimeCellOfWorkerTime> timeCellsRequest = new ArrayList<>();
-    private List<TimeCell> actualWorkGraph = new ArrayList<>();
+    private List<TimeCellOfJob> actualWorkGraph = new ArrayList<>();
 
     /**
      * Calculates List of workers who sent queries for work. Searches for
@@ -59,11 +59,11 @@ public class TimeManager {
      * @param end
      * @return 
      */
-    public List<TimeCell> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) {
+    public List<TimeCellOfJob> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) throws CloneNotSupportedException {
         final List<Worker> workersList = getWorkersAvailableInPeriod(start, end);
         
         //To hold fair graph of work
-        List<TimeCell> fairGraphOfWork = new ArrayList<>();
+        List<TimeCellOfJob> fairGraphOfWork = new ArrayList<>();
         
         //number of hours in the interval between start and end
         long numberOfHours = Duration.between(start, end).toHours();
@@ -72,11 +72,13 @@ public class TimeManager {
         for (LocalDateTime i = start; i.isBefore(end); i.plusHours(minimnPeriodOfWorkInHours)){
             for (Worker worker: workersList){
                 try {
-                    fairGraphOfWork.add(new TimeCellOfWorkerTime(
+                    fairGraphOfWork.add(new TimeCellOfJob(
                             start,
                             start.plusHours(minimnPeriodOfWorkInHours),
                             LocalDateTime.now(),
-                            worker, TypeOfWork.ANY));
+                            null,
+                            TypeOfWork.ANY,
+                            worker));
                 } catch (EndBeforeStartException ex) {
                     Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ZeroLengthException ex) {
@@ -87,8 +89,11 @@ public class TimeManager {
         return fairGraphOfWork;
     }
     
-    public List<TimeCell> getActualGraphOfWork(LocalDateTime start, LocalDateTime end){
-        List<TimeCell> fairGraphOfWork = getFairGraphOfWork(start, end);
+    public List<TimeCellOfJob> getActualGraphOfWork(
+            LocalDateTime start,
+            LocalDateTime end) throws
+            CloneNotSupportedException{
+        List<TimeCellOfJob> fairGraphOfWork = getFairGraphOfWork(start, end);
         return null;
     }
 
