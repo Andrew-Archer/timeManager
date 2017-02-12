@@ -63,23 +63,26 @@ public class TimeManagerTest {
                                                     ZeroLengthException {
         TimeManager tm = new TimeManager();
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:15:00"),
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.now(),
-            new Worker("Jack", GROUP)));
+            new Worker("Jack", GROUP),
+            TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.now(),
-            new Worker("Jane", GROUP)));
+            new Worker("Jane", GROUP),
+            TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.parse("2007-12-03T10:18:00"),
             LocalDateTime.now(),
-            new Worker("John", GROUP)));
+            new Worker("John", GROUP),
+            TypeOfWork.ANY));
         
         assertTrue(tm.getWorkersAvailableInPeriod(
                 LocalDateTime.parse("2007-12-03T10:15:00"),
@@ -95,23 +98,26 @@ public class TimeManagerTest {
                                             ZeroLengthException {
             TimeManager tm = new TimeManager();
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:15:00"),
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.now(),
-            new Worker("Jack", GROUP)));
+            new Worker("Jack", GROUP),
+            TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.now(),
-            new Worker("Jane", GROUP)));
+            new Worker("Jane", GROUP),
+            TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellRequest(
+        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.parse("2007-12-03T10:18:00"),
             LocalDateTime.now(),
-            new Worker("John", GROUP)));
+            new Worker("John", GROUP),
+            TypeOfWork.ANY));
         
         List<TimeCell> TimeCellRequests = tm.getFairGraphOfWork(
                 LocalDateTime.MAX,

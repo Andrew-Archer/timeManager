@@ -2,12 +2,37 @@ package timemanager;
 
 import java.time.LocalDateTime;
 
-public class TimeCellAvailable extends TimeCell {
+public class TimeCellOfJob extends TimeCell {
+
+    /**
+     * @return the assinedTo
+     */
+    public Worker getAssinedTo() {
+        return assinedTo;
+    }
+
+    /**
+     * @param assinedTo the assinedTo to set
+     */
+    public void setAssinedTo(Worker assinedTo) {
+        this.assinedTo = assinedTo;
+    }
 
     private Manager creator;
+    private Worker assinedTo;
     private TypeOfWork typeOfWork;
+   
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+        TimeCellOfJob clone = (TimeCellOfJob) super.clone();
+        clone.typeOfWork = typeOfWork;
+        clone.assinedTo = assinedTo.clone();
+        clone.creator = creator.clone();
+        
+        return clone;
+    }
     
-    public TimeCellAvailable(
+    public TimeCellOfJob(
             LocalDateTime start,
             LocalDateTime end,
             LocalDateTime creationTime,
@@ -20,7 +45,7 @@ public class TimeCellAvailable extends TimeCell {
         this.typeOfWork = typeOfWork;
     }
     
-        public TimeCellAvailable(
+        public TimeCellOfJob(
             LocalDateTime start,
             LocalDateTime end,
             Manager creator) throws
@@ -29,6 +54,15 @@ public class TimeCellAvailable extends TimeCell {
         super(start, end);
         this.creator = creator;
     }
+        public TimeCellOfJob(
+                TimeCellOfJob aTimeCell,
+                LocalDateTime anEnd) throws 
+                                            EndBeforeStartException,
+                                            ZeroLengthException{
+            super(aTimeCell, anEnd);
+            assinedTo = aTimeCell.getAssinedTo();
+            
+        }
 
     public Manager getCreator() {
         return creator;

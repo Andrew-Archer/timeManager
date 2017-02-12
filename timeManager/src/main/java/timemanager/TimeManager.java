@@ -14,8 +14,8 @@ public class TimeManager {
     private final int minimnPeriodOfWorkInHours = 1;
     //For example hours in a day
     private final int subItervalLength = minimnPeriodOfWorkInHours * 8;
-    private List<TimeCellAvailable> timeCellsAvailable = new ArrayList<>();
-    private List<TimeCellRequest> timeCellsRequest = new ArrayList<>();
+    private List<TimeCellOfJob> timeCellsAvailable = new ArrayList<>();
+    private List<TimeCellOfWorkerTime> timeCellsRequest = new ArrayList<>();
     private List<TimeCell> actualWorkGraph = new ArrayList<>();
 
     /**
@@ -29,7 +29,7 @@ public class TimeManager {
     public List<Worker> getWorkersAvailableInPeriod(LocalDateTime start, LocalDateTime end) {
         List<Worker> workersList = new ArrayList<>();
         
-        for (TimeCellRequest timeCellRequest : timeCellsRequest){
+        for (TimeCellOfWorkerTime timeCellRequest : timeCellsRequest){
             if (timeCellRequest.isIncludedIn(start.minusNanos(1), end.plusNanos(1)) &&
                    !workersList.contains(timeCellRequest.getWorker())){
                 workersList.add(timeCellRequest.getWorker());
@@ -72,11 +72,11 @@ public class TimeManager {
         for (LocalDateTime i = start; i.isBefore(end); i.plusHours(minimnPeriodOfWorkInHours)){
             for (Worker worker: workersList){
                 try {
-                    fairGraphOfWork.add(new TimeCellRequest(
+                    fairGraphOfWork.add(new TimeCellOfWorkerTime(
                             start,
                             start.plusHours(minimnPeriodOfWorkInHours),
                             LocalDateTime.now(),
-                            worker));
+                            worker, TypeOfWork.ANY));
                 } catch (EndBeforeStartException ex) {
                     Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ZeroLengthException ex) {
@@ -92,19 +92,19 @@ public class TimeManager {
         return null;
     }
 
-    public void addTimeCellAvailable(TimeCellAvailable newJob) {
+    public void addTimeCellAvailable(TimeCellOfJob newJob) {
         //TODO
     }
 
-    public void removeTimeCellAvailable(TimeCellAvailable aJob) {
+    public void removeTimeCellAvailable(TimeCellOfJob aJob) {
 
     }
 
-    public void addTimeCellRequest(TimeCellRequest timeCellRequest) {
+    public void addTimeCellRequest(TimeCellOfWorkerTime timeCellRequest) {
         timeCellsRequest.add(timeCellRequest);
     }
 
-    public void removeTimeCellRequest(TimeCellRequest timeCellRequest) {
+    public void removeTimeCellRequest(TimeCellOfWorkerTime timeCellRequest) {
 
     }
 

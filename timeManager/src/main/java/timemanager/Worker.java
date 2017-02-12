@@ -15,7 +15,15 @@ public class Worker extends Person {
     public TypeOfWork getTypeOfWork() {
         return typeOfWork;
     }
-
+    
+    @Override
+    public Worker clone() throws CloneNotSupportedException{
+        Worker clone;
+        clone = (Worker) super.clone();
+        clone.typeOfWork = typeOfWork;
+        return clone;
+        
+    }
     /**
      * @param typeOfWork the typeOfWork to set
      */

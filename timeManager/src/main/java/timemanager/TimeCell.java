@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeCell {
+public class TimeCell implements Cloneable {
 
     private LocalDateTime start;
     private LocalDateTime end;
@@ -32,6 +32,18 @@ public class TimeCell {
                                         EndBeforeStartException,
                                         ZeroLengthException{
         this(start, end, LocalDateTime.now());
+    }
+    
+    @Override
+    public Object clone() throws
+                                    CloneNotSupportedException{
+        TimeCell clone = (TimeCell) super.clone();
+        
+        clone.setStart(getStart());
+        clone.setEnd(getEnd());
+        clone.setStart(getCreationTime());
+
+        return clone;
     }
 
     public TimeCell(TimeCell aTimeCell) throws 
