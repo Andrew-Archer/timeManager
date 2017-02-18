@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeCell {
+public class TimeCell implements Comparable{
 
     private LocalDateTime start;
     private LocalDateTime end;
@@ -422,6 +422,19 @@ public class TimeCell {
 	public void setTypeOfWork(TypeOfWork typeOfWork) {
 		this.typeOfWork = typeOfWork;
 	}
+
+    @Override
+    public int compareTo(Object o) {
+        int result;
+        if(start.isBefore(((TimeCell)o).start)){
+            result = 1;
+        }else if(start.equals(((TimeCell)o).start)){
+            result = 0;
+        }else{
+            result = -1;
+        }
+        return result;
+    }
 
 
 }

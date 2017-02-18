@@ -71,9 +71,13 @@ public class TimeCellSpliterationResult {
 	
 	public void rewriteInsertionLeft(List<TimeCell> aTimeCell){
 		insertionLeft.clear();
-		insertionLeft.add(aTimeCell);
+		insertionLeft.addAll(aTimeCell);
 	}
 	
+        public boolean isNotEnough(){
+            return !insertionLeft.isEmpty();
+        }
+        
 	/**
 	 * @return the toInsert
 	 */
