@@ -14,9 +14,9 @@ public class TimeManager {
     private final int minimnPeriodOfWorkInHours = 1;
     //For example hours in a day
     private final int subItervalLength = minimnPeriodOfWorkInHours * 8;
-    private List<TimeCellOfJob> timeCellsAvailable = new ArrayList<>();
-    private List<TimeCellOfWorkerTime> timeCellsRequest = new ArrayList<>();
-    private List<TimeCellOfJob> actualWorkGraph = new ArrayList<>();
+    private List<TimeCell> timeCellsAvailable = new ArrayList<>();
+    private List<TimeCell> timeCellsRequest = new ArrayList<>();
+    private final List<TimeCell> actualWorkGraph = new ArrayList<>();
 
     /**
      * Calculates List of workers who sent queries for work. Searches for
@@ -26,10 +26,10 @@ public class TimeManager {
      * @param end
      * @return List of workers who sent queries for work in a given period.
      */
-    public List<Worker> getWorkersAvailableInPeriod(LocalDateTime start, LocalDateTime end) {
+    /*public List<Worker> getWorkersAvailableInPeriod(LocalDateTime start, LocalDateTime end) {
         List<Worker> workersList = new ArrayList<>();
         
-        for (TimeCellOfWorkerTime timeCellRequest : timeCellsRequest){
+        for (TimeCell timeCellRequest : timeCellsRequest){
             if (timeCellRequest.isIncludedIn(start.minusNanos(1), end.plusNanos(1)) &&
                    !workersList.contains(timeCellRequest.getWorker())){
                 workersList.add(timeCellRequest.getWorker());
@@ -59,7 +59,7 @@ public class TimeManager {
      * @param end
      * @return 
      */
-    public List<TimeCellOfJob> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) throws CloneNotSupportedException {
+    /*public List<TimeCellOfJob> getFairGraphOfWork(LocalDateTime start, LocalDateTime end) throws CloneNotSupportedException {
         final List<Worker> workersList = getWorkersAvailableInPeriod(start, end);
         
         //To hold fair graph of work
@@ -115,5 +115,5 @@ public class TimeManager {
 
     public void organizeTimeCells() {
 
-    }
+    }*/
 }

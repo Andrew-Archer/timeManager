@@ -4,17 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeCellSpliterationResult {
+
+    /**
+     * @return the insertionLeft
+     */
+    public TimeCell getInsertionLeft() {
+        return insertionLeft;
+    }
+
+    /**
+     * @param insertionLeft the insertionLeft to set
+     */
+    public void setInsertionLeft(TimeCell insertionLeft) {
+        this.insertionLeft = insertionLeft;
+    }
 	
 	public TimeCellSpliterationResult(){
 		super();
 		toInsert = new ArrayList<TimeCell>();
 		pushedOut = new ArrayList<TimeCell>();
-		insertionLeft = new ArrayList<TimeCell>();
+		insertionLeft = null;
 	}
 	
 	private List<TimeCell> toInsert;
 	private List<TimeCell> pushedOut;
-	private List<TimeCell> insertionLeft;
+	private TimeCell insertionLeft;
 	
 	public void addToInsert(TimeCell aTimeCell){
 		toInsert.add(aTimeCell);
@@ -47,36 +61,6 @@ public class TimeCellSpliterationResult {
 	public void removePushedOut(ArrayList<TimeCell> aTimeCell){
 		pushedOut.removeAll(aTimeCell);
 	}
-	
-	public void addInsertionLeft(TimeCell aTimeCell){
-		insertionLeft.add(aTimeCell);
-	}
-	
-	public void addInsertionLeft(ArrayList<TimeCell> aTimeCell){
-		insertionLeft.addAll(aTimeCell);
-	}
-	
-	public void removeInsertionLeft(TimeCell aTimeCell){
-		insertionLeft.remove(aTimeCell);
-	}
-	
-	public void removeInsertionLeft(ArrayList<TimeCell> aTimeCell){
-		insertionLeft.removeAll(aTimeCell);
-	}
-	
-	public void rewriteInsertionLeft(TimeCell aTimeCell){
-		insertionLeft.clear();
-		insertionLeft.add(aTimeCell);
-	}
-	
-	public void rewriteInsertionLeft(List<TimeCell> aTimeCell){
-		insertionLeft.clear();
-		insertionLeft.addAll(aTimeCell);
-	}
-	
-        public boolean isNotEnough(){
-            return !insertionLeft.isEmpty();
-        }
         
 	/**
 	 * @return the toInsert
@@ -102,19 +86,4 @@ public class TimeCellSpliterationResult {
 	public void setPushedOut(List<TimeCell> pushedOut) {
 		this.pushedOut = pushedOut;
 	}
-	/**
-	 * @return the insertionLeft
-	 */
-	public List<TimeCell> getInsertionLeft() {
-		return insertionLeft;
-	}
-	/**
-	 * @param insertionLeft the insertionLeft to set
-	 */
-	public void setInsertionLeft(List<TimeCell> insertionLeft) {
-		this.insertionLeft = insertionLeft;
-	}
-
-
-
 }
