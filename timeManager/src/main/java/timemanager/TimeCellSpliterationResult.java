@@ -58,6 +58,15 @@ public class TimeCellSpliterationResult {
 		pushedOut.remove(aTimeCell);
 	}
 	
+	/**
+	 * Copies insertionLeft to toInsert,
+	 * and sets insertionLeft to null
+	 */
+	public void pack(){
+		addToInsert(getInsertionLeft());
+		setInsertionLeft(null);		
+	}
+	
 	public void removePushedOut(ArrayList<TimeCell> aTimeCell){
 		pushedOut.removeAll(aTimeCell);
 	}

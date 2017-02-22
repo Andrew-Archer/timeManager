@@ -129,10 +129,6 @@ public class TimeCell implements Comparable {
     }
 
     /**
-     * This method should return 1) List of TimeCell when workers wont to work.
-     * 2) List of TimeCell pushed from graph Of Work/ 3) TimeCell left and not
-     * inserted in graph of work But it's better to take a graph, than pull
-     * overlapping cells, and process it.
      *
      * @param graphToInsertTo
      * @param aCellToInsert
@@ -148,13 +144,7 @@ public class TimeCell implements Comparable {
 
         //Get overlapping with the aCellToInsert cells from the graphToInsertTo.
         List<TimeCell> overlappingOfGraphAndToInsertCell;
-        overlappingOfGraphAndToInsertCell = aCellToInsert.getOverlappingTimeCells(
-                aCellToInsert,
-                graphToInsertTo);
-        overlappingOfGraphAndToInsertCell.sort(null);
-
-        //Removing from the graph overlapping cells.
-        graphToInsertTo.removeAll(overlappingOfGraphAndToInsertCell);
+        overlappingOfGraphAndToInsertCell = aCellToInsert.getOverlappingTimeCells(graphToInsertTo);
 
         //Here we put splitted parts to return.
         TimeCellSpliterationResult result = new TimeCellSpliterationResult();
@@ -164,7 +154,7 @@ public class TimeCell implements Comparable {
 
         //Fills up result
         for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
-
+        	//TODO Put the switch into a separate method 
             switch (result.getInsertionLeft().getOverlappingType(aTimeCell)) {
                 case 11:
                     //Pushed out
@@ -281,15 +271,136 @@ public class TimeCell implements Comparable {
                     break;
             }
         }
-        //Call function to put pushed out cell into the graph
+        //Copies InsertionLeft to ToInsert
+        result.pack();
+        
+        //Extraction pushedOut for processing
+        List<TimeCell> pushedOut = result.getPushedOut();
+        
+        //We can remove pushed out TimeCells we don't need it anymore
+        result.getPushedOut().clear();
+        
+		for (TimeCell timeCellPushedOut : pushedOut) {
+			overlappingOfGraphAndToInsertCell = timeCellPushedOut.getOverlappingTimeCells(
+					graphToInsertTo,
+					aCellToInsert.getExecutor());
+			result.setInsertionLeft(timeCellPushedOut);
+			for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
+
+				switch (timeCellPushedOut.getOverlappingType(aTimeCell)) {
+				case 11:
+					// Pushed out
+					result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
+					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
+					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					// Exit from loop because there is nothing to insert have
+					// left
+					// Needn't go out of loop since it's last iteration case
+					break;
+				case 13:
+					// Pushed out
+					result.addPushedOut(aTimeCell);
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
+					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					// Exit from loop because there is nothing to insert have
+					// left
+					// Needn't go out of loop since it's last iteration case
+					break;
+				case 12:
+					// Pushed out
+					result.addPushedOut(aTimeCell);
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell.getStart(), aTimeCell.getEnd(), aCellToInsert));
+					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
+
+					// Left part of the TimeCell to insert
+					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
+					break;
+				case 21:
+					// Pushed out
+					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aCellToInsert.getEnd(), aTimeCell));
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
+					result.addToInsert(new TimeCell(aCellToInsert));
+					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					break;
+				case 23:
+
+					// Pushed out
+					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aCellToInsert.getEnd(), aTimeCell));
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
+					result.addToInsert(aCellToInsert);
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					break;
+				case 22:
+					// Pushed out
+					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aTimeCell));
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
+					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
+
+					// Left part of the TimeCell to insert
+					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
+					break;
+				case 31:
+					// Pushed out
+					result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
+					result.addToInsert(aCellToInsert);
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					break;
+				case 33:
+					// Pushed out
+					result.addPushedOut(aTimeCell);
+
+					// To insert into the graph
+					result.addToInsert(aCellToInsert);
+
+					// There is nothing left to insert
+					result.setInsertionLeft(null);
+					break;
+				case 32:
+					// Pushed out
+					result.addPushedOut(aTimeCell);
+
+					// To insert into the graph
+					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
+
+					// Left part of the TimeCell to insert
+					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
+					break;
+				}
+			}
+		}
         return result;
     }
 
-    private void insetSpliterationResults(
-            List <TimeCell> graph,
-            TimeCellSpliterationResult result){
-        
-    }
+
     
     @Override
     public String toString(){
@@ -305,7 +416,7 @@ public class TimeCell implements Comparable {
      * @param aTimeCell
      * @return
      */
-    private int getOverlappingType(TimeCell aTimeCell) {
+    public int getOverlappingType(TimeCell aTimeCell) {
         int startType = 30;
         int endType = 3;
 
@@ -325,18 +436,56 @@ public class TimeCell implements Comparable {
     }
 
     //TODO move into the TimeManager
-    public List<TimeCell> getOverlappingTimeCells(TimeCell aTimeCell, List<TimeCell> listOfTimeCells) {
+    /**
+     * Extracts overlapping cells from listOfTimeCells
+     * does not matter who is executor. 
+     * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
+     * @return {@code TimeCell}s list overlapping with current the {@code TimeCell}
+     * sorted by start time.
+     */
+    public List<TimeCell> getOverlappingTimeCells(List<TimeCell> listOfTimeCells) {
         List<TimeCell> result = new ArrayList<>();
 
         for (TimeCell timeCell : listOfTimeCells) {
-            if (aTimeCell.isOverlapping(timeCell)) {
+            if (isOverlapping(timeCell)) {
                 result.add(timeCell);
             }
         }
-
+        listOfTimeCells.removeAll(result);
+        result.sort(null);
         return result;
     }
+    
+    /**
+     * Extracts overlapping {@code TimeCell}s from listOfTimeCells
+     * for the given executor. 
+     * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
+     * @param anExecutor - 
+     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells to overlap.
+     * @return {@code TimeCell}s list overlapping with current the {@code TimeCell}
+     * sorted by start time.
+     */
+    public List<TimeCell> getOverlappingTimeCells(
+    		List<TimeCell> listOfTimeCells,
+    		Worker anExecutor) {
+        List<TimeCell> result = new ArrayList<>();
 
+        for (TimeCell timeCell : listOfTimeCells) {
+            if (isOverlapping(timeCell) &&
+            		timeCell.getExecutor().equals(anExecutor)) {
+                result.add(timeCell);
+            }
+        }
+        listOfTimeCells.removeAll(result);
+        result.sort(null);
+        return result;
+    }
+    
+    /**
+     * Checks weather the current {@code TimeCell} is overlapping with the given {@code TimeCell}.
+     * @param aTimeCell a TimeCell to check for overlapping.
+     * @return {@code true} if {@code aTimeCell} is overlapping and {@code false} if it's not.
+     */
     public boolean isOverlapping(TimeCell aTimeCell) {
         return !((aTimeCell.getStart().isBefore(getStart().plusNanos(1))
                 && aTimeCell.getEnd().isBefore(getStart().plusNanos(1)))
