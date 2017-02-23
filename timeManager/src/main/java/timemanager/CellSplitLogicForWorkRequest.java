@@ -17,38 +17,38 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                 result.addPushedOut(new TimeCell(replacedCell, cellToInsert.getEnd()));
 
                 //To insert into the graph
-                result.addToInsert(new TimeCell(replacedCell.getStart(), cellToInsert));
+                result.addToInsert(new TimeCell(cellToInsert));
                 result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getStart()));
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
-                //Exit from loop because there is nothing to insert have left
-                //Needn't go out of loop since it's last iteration case
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 13:
                 //Pushed out
                 result.addPushedOut(replacedCell);
 
                 //To insert into the graph
-                result.addToInsert(new TimeCell(replacedCell.getStart(), cellToInsert));
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getStart()));
+                result.addToInsert(new TimeCell(cellToInsert));
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
-                //Exit from loop because there is nothing to insert have left
-                //Needn't go out of loop since it's last iteration case
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 12:
                 //Pushed out
                 result.addPushedOut(replacedCell);
 
                 //To insert into the graph
-                result.addToInsert(new TimeCell(
-                        replacedCell.getStart(),
-                        replacedCell.getEnd(),
-                        cellToInsert));
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getStart()));
+                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
 
                 //Left part of the TimeCell to insert
                 result.setInsertionLeft(new TimeCell(replacedCell.getEnd(), cellToInsert));
@@ -67,9 +67,13 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 23:
-
                 //Pushed out
                 result.addPushedOut(new TimeCell(
                         cellToInsert.getStart(),
@@ -78,10 +82,15 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
 
                 //To insert into the graph
                 result.addToInsert(new TimeCell(replacedCell, cellToInsert.getStart()));
-                result.addToInsert(cellToInsert);
+                result.addToInsert(new TimeCell (cellToInsert));
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 22:
                 //Pushed out
@@ -100,24 +109,34 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
 
                 //To insert into the graph
                 result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
-                result.addToInsert(cellToInsert);
+                result.addToInsert(new TimeCell(cellToInsert));
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 33:
                 //Pushed out
-                result.addPushedOut(replacedCell);
+                result.addPushedOut(new TimeCell(replacedCell));
 
                 //To insert into the graph
-                result.addToInsert(cellToInsert);
+                result.addToInsert(new TimeCell(cellToInsert));
 
                 //There is nothing left to insert
                 result.setInsertionLeft(null);
+                /*Exit from loop because there is nothing to insert have left.
+                 *Needn't go out of the loop since this is the last iteration case,
+                 *because the next TimeCell in the main graph
+                 *do not overlap the cellToInsert.
+                 */
                 break;
             case 32:
                 //Pushed out
-                result.addPushedOut(replacedCell);
+                result.addPushedOut(new TimeCell(replacedCell));
 
                 //To insert into the graph
                 result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
