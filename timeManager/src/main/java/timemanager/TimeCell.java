@@ -87,6 +87,15 @@ public class TimeCell implements Comparable {
     /**
      * Main constructor. All other constructors must call it<br>
      * since this constructor check some business rules.
+     * 
+     * @param aStart
+     * @param anEnd
+     * @param aCreationTime
+     * @param aCreator
+     * @param anExecutor
+     * @param aTypeOfWork
+     * @throws timemanager.EndBeforeStartException
+     * @throws timemanager.ZeroLengthException
      */
     public TimeCell(
             LocalDateTime aStart,
@@ -133,13 +142,15 @@ public class TimeCell implements Comparable {
      * @param graphToInsertTo
      * @param aCellToInsert
      * @param aValidator
+     * @param splitLogic
      * @return 
      * @throws Exception
      */
     public TimeCellSpliterationResult splitTimeCells(
             List<TimeCell> graphToInsertTo,
             TimeCell aCellToInsert,
-            PeriodValidator aValidator) throws
+            PeriodValidator aValidator,
+            CellSplitLogic splitLogic) throws
             Exception {
 
         //Get overlapping with the aCellToInsert cells from the graphToInsertTo.
@@ -152,255 +163,21 @@ public class TimeCell implements Comparable {
         //Initializing left insertion with aCellToInsert
         result.setInsertionLeft(aCellToInsert);
 
-        //Fills up result
+        //Inserting TimeCell to insert
         for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
-        	//TODO Put the switch into a separate method 
-            switch (result.getInsertionLeft().getOverlappingType(aTimeCell)) {
-                case 11:
-                    //Pushed out
-                    result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
-                    result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-                    result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    //Exit from loop because there is nothing to insert have left
-                    //Needn't go out of loop since it's last iteration case
-                    break;
-                case 13:
-                    //Pushed out
-                    result.addPushedOut(aTimeCell);
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
-                    result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    //Exit from loop because there is nothing to insert have left
-                    //Needn't go out of loop since it's last iteration case
-                    break;
-                case 12:
-                    //Pushed out
-                    result.addPushedOut(aTimeCell);
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(
-                            aTimeCell.getStart(),
-                            aTimeCell.getEnd(),
-                            aCellToInsert));
-                    result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-
-                    //Left part of the TimeCell to insert
-                    result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-                    break;
-                case 21:
-                    //Pushed out
-                    result.addPushedOut(new TimeCell(
-                            aCellToInsert.getStart(),
-                            aCellToInsert.getEnd(),
-                            aTimeCell));
-                    
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-                    result.addToInsert(new TimeCell(aCellToInsert));
-                    result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    break;
-                case 23:
-
-                    //Pushed out
-                    result.addPushedOut(new TimeCell(
-                            aCellToInsert.getStart(),
-                            aCellToInsert.getEnd(),
-                            aTimeCell));
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-                    result.addToInsert(aCellToInsert);
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    break;
-                case 22:
-                    //Pushed out
-                    result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aTimeCell));
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-                    result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
-
-                    //Left part of the TimeCell to insert
-                    result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-                    break;
-                case 31:
-                    //Pushed out
-                    result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-                    result.addToInsert(aCellToInsert);
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    break;
-                case 33:
-                    //Pushed out
-                    result.addPushedOut(aTimeCell);
-
-                    //To insert into the graph
-                    result.addToInsert(aCellToInsert);
-                    
-                    //There is nothing left to insert
-                    result.setInsertionLeft(null);
-                    break;
-                case 32:
-                    //Pushed out
-                    result.addPushedOut(aTimeCell);
-
-                    //To insert into the graph
-                    result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
-
-                    //Left part of the TimeCell to insert
-                    result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-                    break;
-            }
-        }
-        //Copies InsertionLeft to ToInsert
-        result.pack();
-        
-        //Extraction pushedOut for processing
-        List<TimeCell> pushedOut = result.getPushedOut();
-        
-        //We can remove pushed out TimeCells we don't need it anymore
-        result.getPushedOut().clear();
-        
-		for (TimeCell timeCellPushedOut : pushedOut) {
-			overlappingOfGraphAndToInsertCell = timeCellPushedOut.getOverlappingTimeCells(
-					graphToInsertTo,
-					aCellToInsert.getExecutor());
-			result.setInsertionLeft(timeCellPushedOut);
-			for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
-
-				switch (timeCellPushedOut.getOverlappingType(aTimeCell)) {
-				case 11:
-					// Pushed out
-					result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
-					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					// Exit from loop because there is nothing to insert have
-					// left
-					// Needn't go out of loop since it's last iteration case
-					break;
-				case 13:
-					// Pushed out
-					result.addPushedOut(aTimeCell);
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell.getStart(), aCellToInsert));
-					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					// Exit from loop because there is nothing to insert have
-					// left
-					// Needn't go out of loop since it's last iteration case
-					break;
-				case 12:
-					// Pushed out
-					result.addPushedOut(aTimeCell);
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell.getStart(), aTimeCell.getEnd(), aCellToInsert));
-					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getStart()));
-
-					// Left part of the TimeCell to insert
-					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-					break;
-				case 21:
-					// Pushed out
-					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aCellToInsert.getEnd(), aTimeCell));
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-					result.addToInsert(new TimeCell(aCellToInsert));
-					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					break;
-				case 23:
-
-					// Pushed out
-					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aCellToInsert.getEnd(), aTimeCell));
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-					result.addToInsert(aCellToInsert);
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					break;
-				case 22:
-					// Pushed out
-					result.addPushedOut(new TimeCell(aCellToInsert.getStart(), aTimeCell));
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aTimeCell, aCellToInsert.getStart()));
-					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
-
-					// Left part of the TimeCell to insert
-					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-					break;
-				case 31:
-					// Pushed out
-					result.addPushedOut(new TimeCell(aTimeCell, aCellToInsert.getEnd()));
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aCellToInsert.getEnd(), aTimeCell));
-					result.addToInsert(aCellToInsert);
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					break;
-				case 33:
-					// Pushed out
-					result.addPushedOut(aTimeCell);
-
-					// To insert into the graph
-					result.addToInsert(aCellToInsert);
-
-					// There is nothing left to insert
-					result.setInsertionLeft(null);
-					break;
-				case 32:
-					// Pushed out
-					result.addPushedOut(aTimeCell);
-
-					// To insert into the graph
-					result.addToInsert(new TimeCell(aCellToInsert, aTimeCell.getEnd()));
-
-					// Left part of the TimeCell to insert
-					result.setInsertionLeft(new TimeCell(aTimeCell.getEnd(), aCellToInsert));
-					break;
-				}
-			}
+            result.add(splitLogic.split(aCellToInsert, aTimeCell));
 		}
+        //Inserting pushed out TimeCells
         return result;
     }
 
-
+    public boolean isAssigned(){
+        return !(executor == null);
+    }
+    
+    public boolean isNotAssigned(){
+        return executor == null;
+    }
     
     @Override
     public String toString(){
