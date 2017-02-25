@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package timemanager;
+package timemanager.exceptions;
 
 /**
  *
@@ -11,7 +11,11 @@ package timemanager;
  */
 public class EndBeforeStartException extends Exception {
 
-    private static final String DEFAULT_MESSAGE
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5207698872362766335L;
+	private static final String DEFAULT_MESSAGE
             = "It's not allowed to created TimeCell with the end before the start.";
 
     public EndBeforeStartException() {

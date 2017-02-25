@@ -3,7 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package timemanager;
+package timemanager.cellSplitLogic;
+
+import timemanager.TimeCell;
+import timemanager.TimeCellSpliterationResult;
+import timemanager.exceptions.EndBeforeStartException;
+import timemanager.exceptions.ZeroLengthException;
 
 public class CellSplitLogicForWorkRequest implements CellSplitLogic {
     

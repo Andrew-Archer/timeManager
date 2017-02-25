@@ -1,4 +1,4 @@
-package timemanager;
+package timemanager.validation;
 
 public class PeriodValidator {
     public boolean isValid(){

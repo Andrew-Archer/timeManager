@@ -3,32 +3,43 @@ package timemanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import timemanager.exceptions.UnimplementedMethod;
+
 public class TimeCellSpliterationResult {
 
     /**
-     * @return the insertionLeft
+     * @return last element of insertionLeft list as {@code TimeCell}.
      */
     public TimeCell getInsertionLeft() {
-        return insertionLeft;
+        return insertionLeft.get(insertionLeft.size() - 1);
     }
 
     /**
      * @param insertionLeft the insertionLeft to set
      */
     public void setInsertionLeft(TimeCell insertionLeft) {
-        this.insertionLeft = insertionLeft;
+    	this.insertionLeft.clear();
+        this.insertionLeft.add(insertionLeft);
     }
 
     public TimeCellSpliterationResult() {
         super();
         toInsert = new ArrayList<TimeCell>();
         pushedOut = new ArrayList<TimeCell>();
-        insertionLeft = null;
+        insertionLeft = new ArrayList<TimeCell>();
+    }
+    
+    public void addToInsertionLeft(TimeCell aTimeCell){
+    	insertionLeft.add(aTimeCell);
+    }
+    
+    public List<TimeCell> getInsertionLeftList(){
+    	return insertionLeft;
     }
 
     private List<TimeCell> toInsert;
     private List<TimeCell> pushedOut;
-    private TimeCell insertionLeft;
+    private List<TimeCell> insertionLeft;
 
     public void addToInsert(TimeCell aTimeCell) {
         toInsert.add(aTimeCell);
@@ -49,7 +60,11 @@ public class TimeCellSpliterationResult {
     public void addPushedOut(TimeCell aTimeCell) {
         pushedOut.add(aTimeCell);
     }
-
+    
+    public List<TimeCell> packItToList(List<TimeCell> toInsert){
+    	throw new UnimplementedMethod();
+    }
+    
     public void addPushedOut(ArrayList<TimeCell> aTimeCell) {
         pushedOut.addAll(aTimeCell);
     }
@@ -63,7 +78,7 @@ public class TimeCellSpliterationResult {
      */
     public void pack() {
         addToInsert(getInsertionLeft());
-        setInsertionLeft(null);
+        insertionLeft.remove(insertionLeft.size() - 1);
     }
 
     public void removePushedOut(ArrayList<TimeCell> aTimeCell) {
@@ -99,8 +114,8 @@ public class TimeCellSpliterationResult {
     }
 
     public void add(TimeCellSpliterationResult result) {
-        toInsert = result.getToInsert();
         pushedOut.addAll(result.getPushedOut());
         toInsert.addAll(result.getToInsert());
+        insertionLeft.addAll(result.getInsertionLeftList());
     }
 }

@@ -3,17 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package timemanager;
+package timemanager.exceptions;
 
 /**
  *
  * @author razan
  */
-public class PeriodValidationFailureException extends Exception{
-    private static final String DEFAULT_MESSAGE
+public class PeriodValidationFailure extends Exception{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 86506882455594292L;
+	private static final String DEFAULT_MESSAGE
             = "You try to violate period restrictions.";
 
-    public PeriodValidationFailureException() {
+    public PeriodValidationFailure() {
         super(DEFAULT_MESSAGE);
     }
 }

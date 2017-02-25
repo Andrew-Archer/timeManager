@@ -1,6 +1,6 @@
-package timemanager;
+package timemanager.actors;
 
-
+import timemanager.TypeOfWork;
 
 public class Worker extends Person {
     public Worker(String aName, TypeOfWork typeOfWork){

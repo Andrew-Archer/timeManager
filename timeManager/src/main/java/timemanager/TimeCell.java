@@ -4,7 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeCell implements Comparable {
+import timemanager.actors.Person;
+import timemanager.actors.Worker;
+import timemanager.cellSplitLogic.CellSplitLogic;
+import timemanager.exceptions.EndBeforeStartException;
+import timemanager.exceptions.ZeroLengthException;
+import timemanager.validation.PeriodValidator;
+
+public class TimeCell implements Comparable<TimeCell> {
 
     private LocalDateTime start;
     private LocalDateTime end;
@@ -94,8 +101,8 @@ public class TimeCell implements Comparable {
      * @param aCreator
      * @param anExecutor
      * @param aTypeOfWork
-     * @throws timemanager.EndBeforeStartException
-     * @throws timemanager.ZeroLengthException
+     * @throws timemanager.exceptions.EndBeforeStartException
+     * @throws timemanager.exceptions.ZeroLengthException
      */
     public TimeCell(
             LocalDateTime aStart,
@@ -146,11 +153,12 @@ public class TimeCell implements Comparable {
      * @return 
      * @throws Exception
      */
-    public TimeCellSpliterationResult splitTimeCells(
+    public List <TimeCell> splitTimeCells(
             List<TimeCell> graphToInsertTo,
             TimeCell aCellToInsert,
             PeriodValidator aValidator,
-            CellSplitLogic splitLogic) throws
+            CellSplitLogic splitLogic,
+            CellSplitLogic splitLogicForPushed) throws
             Exception {
 
         //Get overlapping with the aCellToInsert cells from the graphToInsertTo.
@@ -168,7 +176,17 @@ public class TimeCell implements Comparable {
             result.add(splitLogic.split(aCellToInsert, aTimeCell));
 		}
         //Inserting pushed out TimeCells
-        return result;
+        //Get TimeCell with the same name as.
+        List<TimeCell> timeCellsListForGivenWorker;
+        timeCellsListForGivenWorker = aCellToInsert.getTimeCellsAssignedTo(
+        		graphToInsertTo,
+        		aCellToInsert.getExecutor());
+        for (TimeCell pushedOut: result.getPushedOut()){
+        	for (TimeCell assinedForWorker: timeCellsListForGivenWorker){
+        		result.add(splitLogicForPushed.split(pushedOut, assinedForWorker));
+        	}
+        }
+        return result.packItToList(graphToInsertTo);
     }
 
     public boolean isAssigned(){
@@ -212,7 +230,6 @@ public class TimeCell implements Comparable {
         return startType + endType;
     }
 
-    //TODO move into the TimeManager
     /**
      * Extracts overlapping cells from listOfTimeCells
      * does not matter who is executor. 
@@ -234,22 +251,21 @@ public class TimeCell implements Comparable {
     }
     
     /**
-     * Extracts overlapping {@code TimeCell}s from listOfTimeCells
-     * for the given executor. 
+     * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
      * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
      * @param anExecutor - 
-     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells to overlap.
-     * @return {@code TimeCell}s list overlapping with current the {@code TimeCell}
+     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
+     * @return {@code TimeCell}s list for given {@code Worker} or nor assigned
      * sorted by start time.
      */
-    public List<TimeCell> getOverlappingTimeCells(
+    public List<TimeCell> getTimeCellsAssignedTo(
     		List<TimeCell> listOfTimeCells,
     		Worker anExecutor) {
         List<TimeCell> result = new ArrayList<>();
 
         for (TimeCell timeCell : listOfTimeCells) {
-            if (isOverlapping(timeCell) &&
-            		timeCell.getExecutor().equals(anExecutor)) {
+            if (timeCell.getExecutor().equals(anExecutor) ||
+            		timeCell.isNotAssigned()) {
                 result.add(timeCell);
             }
         }
@@ -355,8 +371,8 @@ public class TimeCell implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return start.compareTo(((TimeCell) o).start);
+    public int compareTo(TimeCell o) {
+        return start.compareTo(o.start);
     }
 
 }

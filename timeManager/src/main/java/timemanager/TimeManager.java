@@ -2,12 +2,8 @@ package timemanager;
 
 
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TimeManager {
     //For example one hour

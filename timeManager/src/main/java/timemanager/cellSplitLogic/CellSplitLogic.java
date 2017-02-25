@@ -3,7 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package timemanager;
+package timemanager.cellSplitLogic;
+
+import timemanager.TimeCell;
+import timemanager.TimeCellSpliterationResult;
+import timemanager.exceptions.EndBeforeStartException;
+import timemanager.exceptions.ZeroLengthException;
 
 /**
  *
@@ -16,8 +21,8 @@ public interface CellSplitLogic {
      * @param cellToInsert
      * @param replacedCell
      * @return
-     * @throws timemanager.EndBeforeStartException
-     * @throws timemanager.ZeroLengthException
+     * @throws timemanager.exceptions.EndBeforeStartException
+     * @throws timemanager.exceptions.ZeroLengthException
      */
     public TimeCellSpliterationResult split(
             TimeCell cellToInsert,

@@ -7,6 +7,9 @@ package timemanager;
 
 import java.time.LocalDateTime;
 
+import timemanager.actors.Person;
+import timemanager.actors.Worker;
+
 /**
  *
  * @author razan

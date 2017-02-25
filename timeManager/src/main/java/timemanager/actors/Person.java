@@ -1,4 +1,4 @@
-package timemanager;
+package timemanager.actors;
 
 
 
