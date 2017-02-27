@@ -7,9 +7,14 @@ package timemanager;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import timemanager.actors.Worker;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static timemanager.TypeOfWork.*;
+import timemanager.actors.Manager;
+import timemanager.actors.Person;
+import timemanager.exceptions.EndBeforeStartException;
+import timemanager.exceptions.ZeroLengthException;
 
 /**
  *
@@ -19,121 +24,71 @@ public class TimeManagerTest {
     
     public TimeManagerTest() {
     }
-    
+
     /**
-     * Try to create TimeCell with the end equals to the start.
-     * It passes the test if ZeroLengthException is trown.
+     * Test of getActualWorkGraph method, of class TimeManager.
      */
-    /*@Test
-    public void testZeroLengthException(){
-        boolean result = false;
-        try{
-            new TimeCell(
-                    LocalDateTime.now(),
-                    LocalDateTime.now(),
-            LocalDateTime.now(),
-            new Person("James"), 
-            new Worker("Fred", TypeOfWork.ANY),
-            TypeOfWork.ANY);
-        }catch(ZeroLengthException ex){
-            result = true;
-        }catch(EndBeforeStartException ex){
-            result = false;
-        }
-        assertTrue(result);
-    }
-    
-    /**
-     * Try to create TimeCell with the end before the start.
-     * It passes the test if EndBeforeStartException is trown.
-     */
-    /*@Test
-    public void testEndBeforeStartException(){
-        boolean result = false;
-        try{
-            new TimeCell(
-                    LocalDateTime.now(),
-                    LocalDateTime.now().plusDays(1),
-            LocalDateTime.now(),
-            new Person("James"), 
-            new Worker("Fred", TypeOfWork.ANY),
-            TypeOfWork.ANY);
-        }catch(ZeroLengthException ex){
-            result = false;
-        }catch(EndBeforeStartException ex){
-            result = true;
-        }
-        assertTrue(result);
+    @Test
+    public void testGetActualWorkGraph() {
     }
 
     /**
-     * Test of getWorkersAvailableInPeriod method, of class TimeManager.
+     * Test of setActualWorkGraph method, of class TimeManager.
      */
-    /*@Test
-    public void testGetWorkersAvailableInPeriod() throws 
-                                                    EndBeforeStartException,
-                                                    ZeroLengthException {
-        TimeManager tm = new TimeManager();
-        
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
-            LocalDateTime.parse("2007-12-03T10:15:00"),
-            LocalDateTime.parse("2007-12-03T10:16:00"),
-            LocalDateTime.now(),
-            new Worker("Jack", GROUP),
-            TypeOfWork.ANY));
-        
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
-            LocalDateTime.parse("2007-12-03T10:16:00"),
-            LocalDateTime.parse("2007-12-03T10:17:00"),
-            LocalDateTime.now(),
-            new Worker("Jane", GROUP),
-            TypeOfWork.ANY));
-        
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
-            LocalDateTime.parse("2007-12-03T10:17:00"),
-            LocalDateTime.parse("2007-12-03T10:18:00"),
-            LocalDateTime.now(),
-            new Worker("John", GROUP),
-            TypeOfWork.ANY));
-        
-        assertTrue(tm.getWorkersAvailableInPeriod(
-                LocalDateTime.parse("2007-12-03T10:15:00"),
-                LocalDateTime.parse("2007-12-03T10:18:00")).size() == 3);
-    }*/
+    @Test
+    public void testSetActualWorkGraph() {
+    }
+
+    /**
+     * Test of generateFairGraphOfWork method, of class TimeManager.
+     */
+    @Test
+    public void testGenerateFairGraphOfWork() throws Exception {
+    }
+
+    /**
+     * Test of splitTimeCells method, of class TimeManager.
+     */
+    @Test
+    public void testSplitTimeCells() throws Exception {
+    }
+    
+    
 
     /**
      * Test of getFairGraphOfWork method, of class TimeManager.
      */
-    /*@Test
+    @Test
     public void testGetFairGraphOfWork() throws
                                             EndBeforeStartException,
                                             ZeroLengthException {
             TimeManager tm = new TimeManager();
         
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
+        tm.getActualWorkGraph().add(new TimeCell(
             LocalDateTime.parse("2007-12-03T10:15:00"),
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.now(),
+            new Manager("Robert"),
             new Worker("Jack", GROUP),
             TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
+        tm.getActualWorkGraph().add(new TimeCell(
             LocalDateTime.parse("2007-12-03T10:16:00"),
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.now(),
+            new Manager("Robert"),
             new Worker("Jane", GROUP),
             TypeOfWork.ANY));
         
-        tm.addTimeCellRequest(new TimeCellOfWorkerTime(
+        tm.getActualWorkGraph().add(new TimeCell(
             LocalDateTime.parse("2007-12-03T10:17:00"),
             LocalDateTime.parse("2007-12-03T10:18:00"),
             LocalDateTime.now(),
+            new Manager("Robert"),
             new Worker("John", GROUP),
             TypeOfWork.ANY));
         
-        List<TimeCell> TimeCellRequests = tm.getFairGraphOfWork(
-                LocalDateTime.MAX,
-                LocalDateTime.MIN);
+        assertTrue(tm.getActualWorkGraph().size() == 3);
     }
 /*
 

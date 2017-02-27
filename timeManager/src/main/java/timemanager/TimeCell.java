@@ -6,10 +6,8 @@ import java.util.List;
 
 import timemanager.actors.Person;
 import timemanager.actors.Worker;
-import timemanager.cellSplitLogic.CellSplitLogic;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
-import timemanager.validation.PeriodValidator;
 
 public class TimeCell implements Comparable<TimeCell> {
 
@@ -144,51 +142,6 @@ public class TimeCell implements Comparable<TimeCell> {
                 aTimeCell.getTypeOfWork());
     }
 
-    /**
-     *
-     * @param graphToInsertTo
-     * @param aCellToInsert
-     * @param aValidator
-     * @param splitLogic
-     * @return 
-     * @throws Exception
-     */
-    public List <TimeCell> splitTimeCells(
-            List<TimeCell> graphToInsertTo,
-            TimeCell aCellToInsert,
-            PeriodValidator aValidator,
-            CellSplitLogic splitLogic,
-            CellSplitLogic splitLogicForPushed) throws
-            Exception {
-
-        //Get overlapping with the aCellToInsert cells from the graphToInsertTo.
-        List<TimeCell> overlappingOfGraphAndToInsertCell;
-        overlappingOfGraphAndToInsertCell = aCellToInsert.getOverlappingTimeCells(graphToInsertTo);
-
-        //Here we put splitted parts to return.
-        TimeCellSpliterationResult result = new TimeCellSpliterationResult();
-
-        //Initializing left insertion with aCellToInsert
-        result.setInsertionLeft(aCellToInsert);
-
-        //Inserting TimeCell to insert
-        for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
-            result.add(splitLogic.split(aCellToInsert, aTimeCell));
-		}
-        //Inserting pushed out TimeCells
-        //Get TimeCell with the same name as.
-        List<TimeCell> timeCellsListForGivenWorker;
-        timeCellsListForGivenWorker = aCellToInsert.getTimeCellsAssignedTo(
-        		graphToInsertTo,
-        		aCellToInsert.getExecutor());
-        for (TimeCell pushedOut: result.getPushedOut()){
-        	for (TimeCell assinedForWorker: timeCellsListForGivenWorker){
-        		result.add(splitLogicForPushed.split(pushedOut, assinedForWorker));
-        	}
-        }
-        return result.packItToList(graphToInsertTo);
-    }
-
     public boolean isAssigned(){
         return !(executor == null);
     }
@@ -200,8 +153,8 @@ public class TimeCell implements Comparable<TimeCell> {
     @Override
     public String toString(){
         return "start: " + getStart() + "\n" +
-                "end:"  + getEnd() + "\n" +
-                "executor: " + getExecutor().getName() +
+                "end:   "  + getEnd() + "\n" +
+                "executor: " + (getExecutor()==null?"not assigned":getExecutor().getName()) +
                 " creator: " + getCreator().getName();
     }
     /**
@@ -224,7 +177,7 @@ public class TimeCell implements Comparable<TimeCell> {
         if (getEnd().isBefore(aTimeCell.getEnd())) {
             endType = 1;
         } else if (getEnd().isAfter(aTimeCell.getEnd())) {
-            startType = 2;
+            endType = 2;
         }
 
         return startType + endType;
@@ -280,10 +233,19 @@ public class TimeCell implements Comparable<TimeCell> {
      * @return {@code true} if {@code aTimeCell} is overlapping and {@code false} if it's not.
      */
     public boolean isOverlapping(TimeCell aTimeCell) {
-        return !((aTimeCell.getStart().isBefore(getStart().plusNanos(1))
-                && aTimeCell.getEnd().isBefore(getStart().plusNanos(1)))
-                || (aTimeCell.getStart().isAfter(getEnd())
-                && aTimeCell.getEnd().isAfter(getEnd())));
+        return !(
+                    (
+                        aTimeCell.getStart().isBefore(getStart().plusNanos(1))
+                        && 
+                        aTimeCell.getEnd().isBefore(getStart().plusNanos(1))
+                    )
+                ||
+                    (
+                        aTimeCell.getStart().isAfter(getEnd().minusNanos(1))
+                        &&
+                        aTimeCell.getEnd().isAfter(getEnd().minusNanos(1))
+                    )
+                );
     }
 
     /**
