@@ -18,6 +18,17 @@ public class TimeCell implements Comparable<TimeCell> {
     private Worker executor = null;
     private TypeOfWork typeOfWork = TypeOfWork.ANY;
 
+    
+    public boolean equals(TimeCell aTimeCell){
+        return
+            getStart().equals(aTimeCell.getStart()) &&
+            getEnd().equals(aTimeCell.getEnd()) &&
+            getCreationTime().equals(aTimeCell.getCreationTime()) &&
+            getCreator().equals(aTimeCell.getCreator()) &&
+            getExecutor().equals(aTimeCell.getExecutor()) &&
+            getTypeOfWork().equals(aTimeCell.getTypeOfWork());
+    }
+    
     public TimeCell(
             TimeCell original,
             LocalDateTime newEnd) throws

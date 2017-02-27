@@ -27,7 +27,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph
@@ -36,13 +36,13 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     break;
                 case 13:
                     //Pushed out
-                    result.addPushedOut(replacedCell);
+                    result.addPushedOut(new TimeCell(replacedCell));
 
                     //To insert into the graph
                     result.addToInsert(new TimeCell(cellToInsert));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph
@@ -51,7 +51,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     break;
                 case 12:
                     //Pushed out
-                    result.addPushedOut(replacedCell);
+                    result.addPushedOut(new TimeCell(replacedCell));
 
                     //To insert into the graph
                     result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
@@ -72,7 +72,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph
@@ -91,7 +91,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addToInsert(new TimeCell(cellToInsert));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph
@@ -118,7 +118,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addToInsert(new TimeCell(cellToInsert));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph
@@ -133,7 +133,7 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addToInsert(new TimeCell(cellToInsert));
 
                     //There is nothing left to insert
-                    result.setInsertionLeft(null);
+                    //result.setInsertionLeft(null);
                     /*Exit from loop because there is nothing to insert have left.
                  *Needn't go out of the loop since this is the last iteration case,
                  *because the next TimeCell in the main graph

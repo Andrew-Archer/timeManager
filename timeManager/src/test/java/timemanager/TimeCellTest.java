@@ -25,7 +25,7 @@ public class TimeCellTest {
     private List<TimeCell> listToCompare = new ArrayList<>();
     private TimeCell cellToInsert;
     public TimeCellTest() throws EndBeforeStartException, ZeroLengthException {
-        LocalDateTime startOfCellToInsert = LocalDateTime.now();
+        LocalDateTime startOfCellToInsert = LocalDateTime.of(2017, 02, 1, 0, 0, 0, 0);
         cellToInsert = new TimeCell(
                 startOfCellToInsert,
                 startOfCellToInsert.plusHours(3),

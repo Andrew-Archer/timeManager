@@ -5,8 +5,23 @@ import java.util.List;
 
 import timemanager.exceptions.UnimplementedMethod;
 
-public class TimeCellSpliterationResult {
+/**
+ *
+ * @author razan
+ */
+public class TimeCellSpliterationResult{
 
+    public boolean equals(TimeCellSpliterationResult result){
+        return toInsert.equals(result.getToInsert()) &&
+                pushedOut.equals(result.getPushedOut()) &&
+                insertionLeft.equals(result.getInsertionLeftList());
+    }
+    
+    public TimeCellSpliterationResult(){
+        toInsert = new ArrayList<>();
+        pushedOut = new ArrayList<>();;
+        insertionLeft = new ArrayList<>();
+    }
     /**
      * @return last element of insertionLeft list as {@code TimeCell}.
      */
@@ -22,11 +37,14 @@ public class TimeCellSpliterationResult {
         this.insertionLeft.add(insertionLeft);
     }
 
-    public TimeCellSpliterationResult() {
+    public TimeCellSpliterationResult(
+            List<TimeCell> toInsert,
+            List<TimeCell> pushedOut,
+            List<TimeCell> insertionLeft) {
         super();
-        toInsert = new ArrayList<TimeCell>();
-        pushedOut = new ArrayList<TimeCell>();
-        insertionLeft = new ArrayList<TimeCell>();
+        this.toInsert = toInsert;
+        this.pushedOut = pushedOut;
+        this.insertionLeft = insertionLeft;
     }
     
     public void addToInsertionLeft(TimeCell aTimeCell){
