@@ -114,8 +114,9 @@ public class CellSplitLogicForWorkRequest implements CellSplitLogic {
                     result.addPushedOut(new TimeCell(replacedCell, cellToInsert.getEnd()));
 
                     //To insert into the graph
-                    result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
                     result.addToInsert(new TimeCell(cellToInsert));
+                    result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
+                    
 
                     //There is nothing left to insert
                     //result.setInsertionLeft(null);

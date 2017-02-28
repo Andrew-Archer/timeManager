@@ -20,13 +20,15 @@ public class TimeCell implements Comparable<TimeCell> {
 
     
     public boolean equals(TimeCell aTimeCell){
-        return
+        boolean result = aTimeCell == null ? false:
             getStart().equals(aTimeCell.getStart()) &&
             getEnd().equals(aTimeCell.getEnd()) &&
-            getCreationTime().equals(aTimeCell.getCreationTime()) &&
+            getCreationTime().equals(aTimeCell.getCreationTime())/* &&
             getCreator().equals(aTimeCell.getCreator()) &&
             getExecutor().equals(aTimeCell.getExecutor()) &&
-            getTypeOfWork().equals(aTimeCell.getTypeOfWork());
+            getTypeOfWork().equals(aTimeCell.getTypeOfWork())*/;
+        System.out.println(result + "From TimeCell.equals()");
+        return result;
     }
     
     public TimeCell(
@@ -166,7 +168,7 @@ public class TimeCell implements Comparable<TimeCell> {
         return "start: " + getStart() + "\n" +
                 "end:   "  + getEnd() + "\n" +
                 "executor: " + (getExecutor()==null?"not assigned":getExecutor().getName()) +
-                " creator: " + getCreator().getName();
+                " creator: " + getCreator().getName() + "\n";
     }
     /**
      * There are only 9 types of overlapping is available, since there are no

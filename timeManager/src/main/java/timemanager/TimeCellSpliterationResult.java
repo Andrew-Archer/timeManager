@@ -11,16 +11,18 @@ import timemanager.exceptions.UnimplementedMethod;
  */
 public class TimeCellSpliterationResult{
 
-    public boolean equals(TimeCellSpliterationResult result){
-        return toInsert.equals(result.getToInsert()) &&
-                pushedOut.equals(result.getPushedOut()) &&
-                insertionLeft.equals(result.getInsertionLeftList());
+    public boolean equals(TimeCellSpliterationResult splitResult){
+        boolean result = toInsert.equals(splitResult.getToInsert()) &&
+                pushedOut.equals(splitResult.getPushedOut()) &&
+                insertionLeft.equals(splitResult.getInsertionLeftList());
+        System.out.println(result);
+        return result;
     }
     
     public TimeCellSpliterationResult(){
-        toInsert = new ArrayList<>();
-        pushedOut = new ArrayList<>();;
-        insertionLeft = new ArrayList<>();
+        toInsert = new ArrayList<TimeCell>();
+        pushedOut = new ArrayList<TimeCell>();;
+        insertionLeft = new ArrayList<TimeCell>();
     }
     /**
      * @return last element of insertionLeft list as {@code TimeCell}.
@@ -131,6 +133,25 @@ public class TimeCellSpliterationResult{
         this.pushedOut = pushedOut;
     }
 
+    @Override
+    public String toString(){
+        String result = "SpliterationResult\n";
+        result = result + "pushedOut\n";
+        for (TimeCell timeCell :pushedOut){
+            result = result + timeCell;
+        }
+        result = result + "toInsert\n";
+        for (TimeCell timeCell :toInsert){
+            result = result + timeCell;
+        }
+        result = result + "pushedOut\n";
+        for (TimeCell timeCell :pushedOut){
+            result = result + timeCell;
+        }
+        
+        return result;
+    }
+    
     public void add(TimeCellSpliterationResult result) {
         pushedOut.addAll(result.getPushedOut());
         toInsert.addAll(result.getToInsert());
