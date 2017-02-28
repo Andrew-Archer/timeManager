@@ -3,6 +3,7 @@ package timemanager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import timemanager.actors.Person;
 import timemanager.actors.Worker;
@@ -19,17 +20,21 @@ public class TimeCell implements Comparable<TimeCell> {
     private TypeOfWork typeOfWork = TypeOfWork.ANY;
 
     
-    public boolean equals(TimeCell aTimeCell){
+    /*public boolean equals(TimeCell aTimeCell){
         boolean result = aTimeCell == null ? false:
             getStart().equals(aTimeCell.getStart()) &&
             getEnd().equals(aTimeCell.getEnd()) &&
-            getCreationTime().equals(aTimeCell.getCreationTime())/* &&
+            getCreationTime().equals(aTimeCell.getCreationTime()) &&
             getCreator().equals(aTimeCell.getCreator()) &&
             getExecutor().equals(aTimeCell.getExecutor()) &&
-            getTypeOfWork().equals(aTimeCell.getTypeOfWork())*/;
+            getTypeOfWork().equals(aTimeCell.getTypeOfWork());
         System.out.println(result + "From TimeCell.equals()");
         return result;
-    }
+    }*/
+
+    
+    
+    
     
     public TimeCell(
             TimeCell original,
@@ -45,7 +50,65 @@ public class TimeCell implements Comparable<TimeCell> {
                 original.getTypeOfWork());
     }
 
-    public TimeCell(
+    /* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((creationTime == null) ? 0 : creationTime.hashCode());
+		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + ((executor == null) ? 0 : executor.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		result = prime * result + ((typeOfWork == null) ? 0 : typeOfWork.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TimeCell other = (TimeCell) obj;
+		if (creationTime == null) {
+			if (other.creationTime != null)
+				return false;
+		} else if (!creationTime.equals(other.creationTime))
+			return false;
+		if (creator == null) {
+			if (other.creator != null)
+				return false;
+		} else if (!creator.equals(other.creator))
+			return false;
+		if (end == null) {
+			if (other.end != null)
+				return false;
+		} else if (!end.equals(other.end))
+			return false;
+		if (executor == null) {
+			if (other.executor != null)
+				return false;
+		} else if (!executor.equals(other.executor))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		if (typeOfWork != other.typeOfWork)
+			return false;
+		return true;
+	}
+
+	public TimeCell(
             LocalDateTime newStart,
             TimeCell original) throws
             EndBeforeStartException,
@@ -167,6 +230,7 @@ public class TimeCell implements Comparable<TimeCell> {
     public String toString(){
         return "start: " + getStart() + "\n" +
                 "end:   "  + getEnd() + "\n" +
+                "creationTime: " + getCreationTime() + "\n" +
                 "executor: " + (getExecutor()==null?"not assigned":getExecutor().getName()) +
                 " creator: " + getCreator().getName() + "\n";
     }

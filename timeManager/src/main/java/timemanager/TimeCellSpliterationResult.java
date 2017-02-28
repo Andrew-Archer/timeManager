@@ -2,6 +2,7 @@ package timemanager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import timemanager.exceptions.UnimplementedMethod;
 
@@ -11,13 +12,40 @@ import timemanager.exceptions.UnimplementedMethod;
  */
 public class TimeCellSpliterationResult{
 
-    public boolean equals(TimeCellSpliterationResult splitResult){
-        boolean result = toInsert.equals(splitResult.getToInsert()) &&
-                pushedOut.equals(splitResult.getPushedOut()) &&
-                insertionLeft.equals(splitResult.getInsertionLeftList());
-        System.out.println(result);
-        return result;
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(this.toInsert);
+        hash = 31 * hash + Objects.hashCode(this.pushedOut);
+        hash = 31 * hash + Objects.hashCode(this.insertionLeft);
+        return hash;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TimeCellSpliterationResult other = (TimeCellSpliterationResult) obj;
+        if (!this.toInsert.equals(other.toInsert)) {
+            return false;
+        }
+        if (!this.pushedOut.equals(other.pushedOut)) {
+            return false;
+        }
+        if (!this.insertionLeft.equals(other.insertionLeft)) {
+            return false;
+        }
+        return true;
+    }
+
+
     
     public TimeCellSpliterationResult(){
         toInsert = new ArrayList<TimeCell>();

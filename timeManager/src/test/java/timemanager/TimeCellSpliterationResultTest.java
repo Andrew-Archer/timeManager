@@ -74,25 +74,7 @@ public class TimeCellSpliterationResultTest {
      */
     @Test
     public void testEquals() {
-        System.out.println(splitResults.get(0));
-        System.out.println(splitResults.get(1));
-        System.out.println(splitResults.get(2));
         assertTrue(splitResults.get(0).equals(splitResults.get(1)));
-        //assertFalse(splitResults.get(0).equals(splitResults.get(2)));
-    }
-
-    
-    @Test
-    public void testArrayListEqulity(){
-        LocalDateTime initialDateTime = LocalDateTime.now();
-        
-        List<LocalDateTime> L1 = new ArrayList<>();
-        
-        List<LocalDateTime> L2 = new ArrayList<>();
-        
-        L1.add(initialDateTime.plusDays(1));
-        L2.add(initialDateTime.plusDays(1));
-        
-        assertTrue(L1.equals(L2));
+        assertFalse(splitResults.get(0).equals(splitResults.get(2)));
     }
 }
