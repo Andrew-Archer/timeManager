@@ -280,29 +280,7 @@ public class TimeCell implements Comparable<TimeCell> {
         return result;
     }
     
-    /**
-     * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
-     * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
-     * @param anExecutor - 
-     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
-     * @return {@code TimeCell}s list for given {@code Worker} or nor assigned
-     * sorted by start time.
-     */
-    public List<TimeCell> getTimeCellsAssignedTo(
-    		List<TimeCell> listOfTimeCells,
-    		Worker anExecutor) {
-        List<TimeCell> result = new ArrayList<>();
 
-        for (TimeCell timeCell : listOfTimeCells) {
-            if (timeCell.getExecutor().equals(anExecutor) ||
-            		timeCell.isNotAssigned()) {
-                result.add(timeCell);
-            }
-        }
-        listOfTimeCells.removeAll(result);
-        result.sort(null);
-        return result;
-    }
     
     /**
      * Checks weather the current {@code TimeCell} is overlapping with the given {@code TimeCell}.

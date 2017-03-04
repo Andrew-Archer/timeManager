@@ -8,9 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import timemanager.actors.Person;
+import timemanager.actors.Worker;
 import timemanager.cellSplitLogic.CellSplitLogic;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
+import timemanager.graphGenerator.GraphGenerator;
+import timemanager.graphGenerator.TestGraphGenerator;
 import timemanager.validation.PeriodValidator;
 
 public class TimeManager {
@@ -37,39 +40,30 @@ public class TimeManager {
 		this.actualWorkGraph = actualWorkGraph;
 	}
 
-	/**
-	 *Test implementation to get fair graph of work.
-	 * @param start the beginning of a work interval.
-	 * @param end the finish of a work interval.
-	 * @param creator that one how creates a work (manager).
-	 * @throws timemanager.exceptions.ZeroLengthException
-	 */
-	public void generateFairGraphOfWork(
-			LocalDateTime start,
-			LocalDateTime end,
-			long minimunPeriodOfWorkInHours,
-			Person creator)
-					throws ZeroLengthException,
-						EndBeforeStartException{
-		// To hold fair graph of work
-		List<TimeCell> fairGraphOfWork = new ArrayList<>();
-		
-		long numberOfIntervalsToGenerate = Duration.between(start, end).toHours()/minimunPeriodOfWorkInHours;
-
-		// Fills up fair graph of work
-		for (long i = 0; i < numberOfIntervalsToGenerate; i += minimunPeriodOfWorkInHours) {
-			try {
-				fairGraphOfWork.add(new TimeCell(start.plusHours(i), start.plusHours(i + minimunPeriodOfWorkInHours), LocalDateTime.now(),
-						creator, null, TypeOfWork.ANY));
-			} catch (EndBeforeStartException ex) {
-				Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (ZeroLengthException ex) {
-				Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		actualWorkGraph = fairGraphOfWork;
-	}
-
+	
+            /**
+     * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
+     * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
+     * @param anExecutor - 
+     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
+     * @return {@code TimeCell}s list for given {@code Worker} or nor assigned
+     * sorted by start time.
+     */
+    public List<TimeCell> getTimeCellsAssignedTo(Worker anExecutor) {
+        List<TimeCell> result = new ArrayList<>();
+        //time cell executor can be null so you may get null pointer exception
+        for (TimeCell timeCell : actualWorkGraph) {
+            if (timeCell.isNotAssigned()) {
+                result.add(timeCell);
+            }else if(timeCell.getExecutor().equals(anExecutor)){
+                result.add(timeCell);
+            }
+        }
+        actualWorkGraph.removeAll(result);
+        result.sort(null);
+        return result;
+    }
+        
 	/**
 	 *
 	 * @param graphToInsertTo
@@ -104,8 +98,7 @@ public class TimeManager {
 		// Inserting pushed out TimeCells
 		// Get TimeCell with the same name as.
 		List<TimeCell> timeCellsListForGivenWorker;
-		timeCellsListForGivenWorker = aCellToInsert.getTimeCellsAssignedTo(graphToInsertTo,
-				aCellToInsert.getExecutor());
+		timeCellsListForGivenWorker = getTimeCellsAssignedTo(aCellToInsert.getExecutor());
 		for (TimeCell pushedOut : result.getPushedOut()) {
 			for (TimeCell assinedForWorker : timeCellsListForGivenWorker) {
 				result.add(splitLogicForPushed.split(pushedOut, assinedForWorker));
@@ -113,4 +106,17 @@ public class TimeManager {
 		}
 		return result.getToInsert();
 	}
+
+    /**
+     *
+     * @param graphGenerator
+     * @throws timemanager.exceptions.ZeroLengthException
+     * @throws timemanager.exceptions.EndBeforeStartException
+     */
+    public void generateFairGraphOfWork(GraphGenerator graphGenerator) throws
+            ZeroLengthException,
+            EndBeforeStartException {
+        actualWorkGraph = graphGenerator.generate();
+    }
+        
 }

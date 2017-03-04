@@ -9,6 +9,7 @@ import timemanager.cellSplitLogic.CellSplitLogicForPushedOut;
 import timemanager.cellSplitLogic.CellSplitLogicForWorkRequest;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
+import timemanager.graphGenerator.TestGraphGenerator;
 
 public class RunMeIamTheDemo {
 
@@ -16,11 +17,11 @@ public class RunMeIamTheDemo {
 		Exception {
 		TimeManager timeManager = new TimeManager();
 		
-		timeManager.generateFairGraphOfWork(
+		timeManager.generateFairGraphOfWork(new TestGraphGenerator(
 				LocalDateTime.now(),
 				LocalDateTime.now().plusHours(8),
 				1,
-				new Manager("Jack"));
+				new Manager("Jack")));
 		
 		System.out.println("Generated fair graph of work =========================");
 		for(TimeCell timeCell : timeManager.getActualWorkGraph()){
