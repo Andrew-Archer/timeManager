@@ -119,7 +119,7 @@ public class CellSplitLogicForPushedOut implements CellSplitLogic {
                     break;
             }
         } else {
-            result = new CellEmtySplitLogic().split(cellToInsert, replacedCell);
+            result.add(new CellEmtySplitLogic().split(cellToInsert, replacedCell));
         }
         return result;
     }

@@ -8,6 +8,8 @@ public class Manager extends Person {
         super(aName);
     }
     
+    
+    
     @Override
     public Manager clone() throws CloneNotSupportedException{
         Manager clone;

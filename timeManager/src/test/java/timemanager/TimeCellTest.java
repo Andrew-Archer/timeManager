@@ -64,7 +64,7 @@ public class TimeCellTest {
                     LocalDateTime.now(),
                     LocalDateTime.now(),
             LocalDateTime.now(),
-            new Person("James"), 
+            new Manager("James"), 
             new Worker("Fred", TypeOfWork.ANY) {},
             TypeOfWork.ANY);
         }catch(ZeroLengthException ex){
@@ -87,7 +87,7 @@ public class TimeCellTest {
                     LocalDateTime.now(),
                     LocalDateTime.now().minusDays(1),
                     LocalDateTime.now(),
-                    new Person("James"),
+                    new Manager("James"),
                     new Worker("Fred", TypeOfWork.ANY),
                     TypeOfWork.ANY);
         } catch (ZeroLengthException ex) {

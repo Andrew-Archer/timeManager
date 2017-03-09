@@ -14,10 +14,10 @@ public class TimeCellSpliterationResult{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.toInsert);
-        hash = 31 * hash + Objects.hashCode(this.pushedOut);
-        hash = 31 * hash + Objects.hashCode(this.insertionLeft);
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.toInsert);
+        hash = 41 * hash + Objects.hashCode(this.pushedOut);
+        hash = 41 * hash + Objects.hashCode(this.insertionLeft);
         return hash;
     }
 
@@ -33,17 +33,19 @@ public class TimeCellSpliterationResult{
             return false;
         }
         final TimeCellSpliterationResult other = (TimeCellSpliterationResult) obj;
-        if (!this.toInsert.equals(other.toInsert)) {
+        if (!Objects.equals(this.toInsert, other.toInsert)) {
             return false;
         }
-        if (!this.pushedOut.equals(other.pushedOut)) {
+        if (!Objects.equals(this.pushedOut, other.pushedOut)) {
             return false;
         }
-        if (!this.insertionLeft.equals(other.insertionLeft)) {
+        if (!Objects.equals(this.insertionLeft, other.insertionLeft)) {
             return false;
         }
         return true;
     }
+
+   
 
 
     

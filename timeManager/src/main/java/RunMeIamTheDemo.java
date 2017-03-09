@@ -16,30 +16,39 @@ public class RunMeIamTheDemo {
 	public static void main(String[] args) throws
 		Exception {
 		TimeManager timeManager = new TimeManager();
+                LocalDateTime startTime = LocalDateTime.of(1, 1, 1, 0, 0);
 		
+                //generates test graph
 		timeManager.generateFairGraphOfWork(new TestGraphGenerator(
-				LocalDateTime.now(),
-				LocalDateTime.now().plusHours(8),
+				startTime,
+				startTime.plusHours(8),
 				1,
 				new Manager("Jack")));
-		
+                
+                //assign time cell to the test person
+		timeManager.getActualWorkGraph().get(2).setExecutor(new Worker("Karen", TypeOfWork.ANY));
+                
 		System.out.println("Generated fair graph of work =========================");
 		for(TimeCell timeCell : timeManager.getActualWorkGraph()){
-                        System.out.println("____________________________________");
 			System.out.println(timeCell);
 		}
 		System.out.println("Generated fair graph of work =========================\n");
 		
+                //Creates cell for insertion
 		TimeCell timeCellToInsert = new TimeCell(
-				timeManager.getActualWorkGraph().get(1).getStart(),
-				timeManager.getActualWorkGraph().get(5).getEnd(),
+				startTime.plusHours(1),
+				startTime.plusHours(3),
 				LocalDateTime.now(),
 				new Manager("Sam"),
 				new Worker("Jane", TypeOfWork.ANY),
 				 TypeOfWork.ANY);
+                
+                System.out.println("Cell to insert =========================\n");
+                System.out.println(timeCellToInsert);
+                System.out.println("Cell to insert =========================\n");
 		
+                //inserts cell into graph
 		timeManager.splitTimeCells(
-				timeManager.getActualWorkGraph(),
 				timeCellToInsert,
 				null,
 				new CellSplitLogicForWorkRequest(),

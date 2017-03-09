@@ -44,7 +44,7 @@ public class TimeManager {
             /**
      * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
      * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
-     * @param anExecutor - 
+     * @param anExecutor 
      * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
      * @return {@code TimeCell}s list for given {@code Worker} or nor assigned
      * sorted by start time.
@@ -66,24 +66,29 @@ public class TimeManager {
         
 	/**
 	 *
-	 * @param graphToInsertTo
+	 * @param actualWorkGraph
 	 * @param aCellToInsert
 	 * @param aValidator
 	 * @param splitLogic
 	 * @return
 	 * @throws Exception
 	 */
-	public List<TimeCell> splitTimeCells(
-			List<TimeCell> graphToInsertTo,
+	public void splitTimeCells(
 			TimeCell aCellToInsert,
 			PeriodValidator aValidator,
 			CellSplitLogic splitLogic,
 			CellSplitLogic splitLogicForPushed) throws Exception {
 
 		// Get overlapping with the aCellToInsert cells from the
-		// graphToInsertTo.
+		// actualWorkGraph.
 		List<TimeCell> overlappingOfGraphAndToInsertCell;
-		overlappingOfGraphAndToInsertCell = aCellToInsert.getOverlappingTimeCells(graphToInsertTo);
+		overlappingOfGraphAndToInsertCell = aCellToInsert.getOverlappingTimeCells(actualWorkGraph);
+                //Test code
+                System.out.println("Overlapping cells=======================");
+                for (TimeCell timeCell: overlappingOfGraphAndToInsertCell){
+                    System.out.println(timeCell);
+                }
+                System.out.println("Overlapping cells=======================");
 
 		// Here we put splitted parts to return.
 		TimeCellSpliterationResult result = new TimeCellSpliterationResult();
@@ -95,16 +100,20 @@ public class TimeManager {
 		for (TimeCell aTimeCell : overlappingOfGraphAndToInsertCell) {
 			result.add(splitLogic.split(result.getInsertionLeft(), aTimeCell));
 		}
+                
 		// Inserting pushed out TimeCells
 		// Get TimeCell with the same name as.
-		List<TimeCell> timeCellsListForGivenWorker;
-		timeCellsListForGivenWorker = getTimeCellsAssignedTo(aCellToInsert.getExecutor());
-		for (TimeCell pushedOut : result.getPushedOut()) {
-			for (TimeCell assinedForWorker : timeCellsListForGivenWorker) {
+                if (!result.getPushedOut().isEmpty()){
+                    List<TimeCell> timeCellsListForGivenWorker;
+                    timeCellsListForGivenWorker = getTimeCellsAssignedTo(aCellToInsert.getExecutor());
+                    for (TimeCell pushedOut : result.getPushedOut()) {
+                            for (TimeCell assinedForWorker : timeCellsListForGivenWorker) {
 				result.add(splitLogicForPushed.split(pushedOut, assinedForWorker));
-			}
-		}
-		return result.getToInsert();
+                            }
+                    }
+                }
+		actualWorkGraph.addAll(result.getToInsert());
+                actualWorkGraph.sort(null);
 	}
 
     /**

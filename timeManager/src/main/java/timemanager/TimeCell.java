@@ -4,37 +4,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import timemanager.actors.Manager;
 
 import timemanager.actors.Person;
 import timemanager.actors.Worker;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 
-public class TimeCell implements Comparable<TimeCell> {
+public class TimeCell implements Comparable<TimeCell>, Cloneable {
 
     private LocalDateTime start;
     private LocalDateTime end;
     private LocalDateTime creationTime;
-    private Person creator;
+    private Manager creator;
     private Worker executor = null;
     private TypeOfWork typeOfWork = TypeOfWork.ANY;
-
-    
-    /*public boolean equals(TimeCell aTimeCell){
-        boolean result = aTimeCell == null ? false:
-            getStart().equals(aTimeCell.getStart()) &&
-            getEnd().equals(aTimeCell.getEnd()) &&
-            getCreationTime().equals(aTimeCell.getCreationTime()) &&
-            getCreator().equals(aTimeCell.getCreator()) &&
-            getExecutor().equals(aTimeCell.getExecutor()) &&
-            getTypeOfWork().equals(aTimeCell.getTypeOfWork());
-        System.out.println(result + "From TimeCell.equals()");
-        return result;
-    }*/
-
-    
-    
-    
     
     public TimeCell(
             TimeCell original,
@@ -49,6 +33,20 @@ public class TimeCell implements Comparable<TimeCell> {
                 original.getExecutor(),
                 original.getTypeOfWork());
     }
+
+    @Override
+    protected TimeCell clone() throws CloneNotSupportedException {
+        TimeCell clone = (TimeCell)super.clone();
+        clone.start = start;
+        clone.end = end;
+        clone.creationTime = creationTime;
+        clone.creator = creator.clone();
+        clone.executor = executor.clone();
+        clone.typeOfWork = typeOfWork;
+        return clone;
+    }
+    
+    
 
     /* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -125,7 +123,7 @@ public class TimeCell implements Comparable<TimeCell> {
     public TimeCell(
             LocalDateTime aStart,
             LocalDateTime anEnd,
-            Person aCreator) throws
+            Manager aCreator) throws
             EndBeforeStartException,
             ZeroLengthException {
         this(
@@ -140,7 +138,7 @@ public class TimeCell implements Comparable<TimeCell> {
     public TimeCell(
             LocalDateTime aStart,
             LocalDateTime anEnd,
-            Person aCreator,
+            Manager aCreator,
             TypeOfWork aTypeOfWork) throws
             EndBeforeStartException,
             ZeroLengthException {
@@ -182,7 +180,7 @@ public class TimeCell implements Comparable<TimeCell> {
             LocalDateTime aStart,
             LocalDateTime anEnd,
             LocalDateTime aCreationTime,
-            Person aCreator,
+            Manager aCreator,
             Worker anExecutor,
             TypeOfWork aTypeOfWork) throws
             EndBeforeStartException,
@@ -348,14 +346,14 @@ public class TimeCell implements Comparable<TimeCell> {
     /**
      * @return the creator
      */
-    public Person getCreator() {
+    public Manager getCreator() {
         return creator;
     }
 
     /**
      * @param creator the creator to set
      */
-    public void setCreator(Person creator) {
+    public void setCreator(Manager creator) {
         this.creator = creator;
     }
 
