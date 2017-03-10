@@ -21,100 +21,37 @@ public class CellEmtySplitLogic implements CellSplitLogic {
             ZeroLengthException {
         
         TimeCellSpliterationResult result = new TimeCellSpliterationResult();
-        switch (cellToInsert.getOverlappingType(replacedCell)) {
-            case 11:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(cellToInsert));
-                result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
-
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 13:
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 12:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
-
-                //Left part of the TimeCell to insert
-                result.setInsertionLeft(new TimeCell(replacedCell.getEnd(), cellToInsert));
-                break;
-            case 21:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(replacedCell, cellToInsert.getStart()));
-                result.addToInsert(new TimeCell(cellToInsert));
-                result.addToInsert(new TimeCell(cellToInsert.getEnd(), replacedCell));
-
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 23:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(replacedCell, cellToInsert.getStart()));
-                result.addToInsert(new TimeCell(cellToInsert));
-
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 22:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(replacedCell, cellToInsert.getStart()));
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
-
-                //Left part of the TimeCell to insert
-                result.setInsertionLeft(new TimeCell(replacedCell.getEnd(), cellToInsert));
-                break;
-            case 31:
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 33:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(cellToInsert));
-
-                //There is nothing left to insert
-                result.setInsertionLeft(null);
-                /*Exit from loop because there is nothing to insert have left.
-                 *Needn't go out of the loop since this is the last iteration case,
-                 *because the next TimeCell in the main graph
-                 *do not overlap the cellToInsert.
-                 */
-                break;
-            case 32:
-                //To insert into the graph
-                result.addToInsert(new TimeCell(cellToInsert, replacedCell.getEnd()));
-
-                //Left part of the TimeCell to insert
-                result.setInsertionLeft(new TimeCell(replacedCell.getEnd(), cellToInsert));
-                break;
+        
+        //If inserted cell is vider than TimeCell to replace
+        if (cellToInsert.getDuration().compareTo(replacedCell.getDuration()) <  0){
+            result.addToInsert(new TimeCell(
+                replacedCell.getStart(),
+                replacedCell.getStart().plus(cellToInsert.getDuration()),
+                cellToInsert
+            ));
+            result.addToInsertionLeft(new TimeCell(
+                cellToInsert.getStart().plus(cellToInsert.getDuration()),
+                cellToInsert));
+            return result;
         }
+        
+        //If inserted cell is shorter than TimeCell to replace
+        if (cellToInsert.getDuration().compareTo(replacedCell.getDuration()) >0){
+            result.addToInsert(new TimeCell(
+                replacedCell.getStart(),
+                replacedCell.getStart().plus(cellToInsert.getDuration()),
+                cellToInsert
+            ));
+            result.addToInsert(new TimeCell(
+                    replacedCell.getStart().plus(cellToInsert.getDuration()),
+                    replacedCell.getEnd(),
+                    replacedCell
+            ));
+            return result;
+        }
+        
+        //If both cell have the sae duration
+        result.addToInsert(new TimeCell(replacedCell, cellToInsert));
         return result;
     }
 

@@ -1,6 +1,9 @@
 package timemanager;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +35,30 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
                 original.getCreator(),
                 original.getExecutor(),
                 original.getTypeOfWork());
+    }
+
+    /**
+     *
+     * @param replacedCell
+     * @param cellToInsert
+     * @throws EndBeforeStartException
+     * @throws ZeroLengthException
+     */
+    public TimeCell(TimeCell replacedCell, TimeCell cellToInsert)
+            throws
+            EndBeforeStartException, 
+            ZeroLengthException {
+      this(replacedCell.getStart(),
+              replacedCell.getEnd(),
+              cellToInsert.getCreationTime(),
+              cellToInsert.getCreator(),
+              cellToInsert.getExecutor(),
+              cellToInsert.getTypeOfWork()
+              );
+    }
+    
+    public Duration getDuration(){
+       return Duration.between(getStart(), getEnd());
     }
 
     @Override
