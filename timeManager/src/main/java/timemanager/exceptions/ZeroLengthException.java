@@ -15,7 +15,7 @@ public class ZeroLengthException extends Exception{
 	 */
 	private static final long serialVersionUID = 6033644399475678329L;
 	private static final String DEFAULT_MESSAGE
-            = "It's not allowed to created TimeCell with the with" +
+            = "It's not allowed to create TimeCell with " +
             "the end equal to the start.";
 
     public ZeroLengthException() {
