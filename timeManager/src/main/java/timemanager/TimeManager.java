@@ -1,19 +1,12 @@
 package timemanager;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import timemanager.actors.Person;
 import timemanager.actors.Worker;
 import timemanager.cellSplitLogic.CellSplitLogic;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 import timemanager.graphGenerator.GraphGenerator;
-import timemanager.graphGenerator.TestGraphGenerator;
 import timemanager.validation.PeriodValidator;
 
 public class TimeManager {
@@ -22,8 +15,8 @@ public class TimeManager {
 	private final int minimunPeriodOfWorkInHours = 1;
 	// For example hours in a day
 	private final int subItervalLength = minimunPeriodOfWorkInHours * 8;
-	private List<TimeCell> timeCellsAvailable = new ArrayList<>();
-	private List<TimeCell> workRequestTimeCell = new ArrayList<>();
+	private final List<TimeCell> timeCellsAvailable = new ArrayList<>();
+	private final List<TimeCell> workRequestTimeCell = new ArrayList<>();
 	private List<TimeCell> actualWorkGraph = new ArrayList<>();
 
 	/**
@@ -43,7 +36,6 @@ public class TimeManager {
 	
             /**
      * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
-     * @param listOfTimeCells - list from which removes overlapping {@code TimeCell}s.
      * @param anExecutor 
      * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
      * @return {@code TimeCell}s list for given {@code Worker} or nor assigned

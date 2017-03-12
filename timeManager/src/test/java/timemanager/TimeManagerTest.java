@@ -6,6 +6,7 @@
 package timemanager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -38,24 +39,40 @@ public class TimeManagerTest {
         //Worker to find in the graph
         Worker anExecutor = new Worker("Berimor", TypeOfWork.ANY);
         
+        //Generate instance of the tested class
         TimeManager instance = new TimeManager();
+        
         //The beginning of the graph
-        LocalDateTime start = LocalDateTime.of(0, 0, 0, 0, 0);
+        LocalDateTime start = LocalDateTime.of(1, 1, 1, 0, 0);
+        
         //Generate the test graph
         instance.generateFairGraphOfWork(new TestGraphGenerator(
                 start,
                 start.plusHours(8),
                 1,
                 new Manager("George")));
-        //Assign time cell to another executer
+        
+        //Assign a TimeCell to an another executor
         instance.getActualWorkGraph().get(1).setExecutor(new Worker("Alice", TypeOfWork.ANY));
         
-        //Assign TimeCellmto eceutor we are looking for
+        //Assign a TimeCell to the executor we are looking for
         instance.getActualWorkGraph().get(3).setExecutor(anExecutor);
         
-        List<TimeCell> expResult = null;
+        //Fill up the expected result
+        List<TimeCell> expResult = new ArrayList();
+        for (TimeCell aTimeCell: instance.getActualWorkGraph()){
+            if (
+                    aTimeCell.isNotAssigned()
+                    ||
+                    aTimeCell.getExecutor().equals(anExecutor)){
+                expResult.add(new TimeCell(aTimeCell));
+            }
+        }
+        
+        //Get result from the tested function
         List<TimeCell> result = instance.getTimeCellsAssignedTo(anExecutor);
-        result.sort(null);
+        
+        //Check the equality
         assertEquals(expResult, result);
     }
 
