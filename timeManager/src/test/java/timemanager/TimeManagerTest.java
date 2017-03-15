@@ -83,11 +83,48 @@ public class TimeManagerTest {
      */
     @Test
     public void testGenerateFairGraphOfWork() throws Exception {
-        System.out.println("generateFairGraphOfWork");
-        GraphGenerator graphGenerator = null;
+        //Set minimum duration of any TimeCell
+        long minimumDuration = 2;
+        
+        //Set the sample creator
+        Manager creator = new Manager("James");
+        
+        //Set the leght of the test graph
+        long lenghtOfGraph = 4;
+        
+        //The beginning of the graph
+        LocalDateTime start = LocalDateTime.of(1, 1, 1, 1, 0);
+        
+        //Create test graph generator with given parameters 
+        GraphGenerator graphGenerator = new TestGraphGenerator(
+                start,
+                start.plusHours(lenghtOfGraph),
+                minimumDuration,
+                creator
+        );
+        
+        //Create instance of the TimeManager
         TimeManager instance = new TimeManager();
+        
+        //Generate the fair graph of work
         instance.generateFairGraphOfWork(graphGenerator);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        //Set result
+        List<TimeCell> result = instance.getActualWorkGraph();
+        
+        //Set expected result
+        List<TimeCell> expResult = new ArrayList<>();
+        for (int i = 0; i < lenghtOfGraph; i += minimumDuration){
+            expResult.add(new TimeCell(
+                start.plusHours(i),
+                start.plusHours(minimumDuration+i),
+                result.get(1).getCreationTime(),
+                creator,
+                null,
+                TypeOfWork.ANY));
+        }
+       
+        //Check the equality
+        assertEquals(expResult, result);
     }
 }
