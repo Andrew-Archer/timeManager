@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import timemanager.TimeCell;
 import timemanager.TimeManager;
 import timemanager.TypeOfWork;
-import timemanager.actors.Manager;
 import timemanager.actors.Person;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
@@ -38,9 +37,9 @@ public class TestGraphGenerator implements GraphGenerator {
     private LocalDateTime start;
     private LocalDateTime end;
     long nunimumPeriodOfWorkInHours;
-    Manager creator;
+    Person creator;
 
-    public TestGraphGenerator(LocalDateTime start, LocalDateTime end, long nunimumPeriodOfWorkInHours, Manager creator) {
+    public TestGraphGenerator(LocalDateTime start, LocalDateTime end, long nunimumPeriodOfWorkInHours, Person creator) {
         this.start = start;
         this.end = end;
         this.nunimumPeriodOfWorkInHours = nunimumPeriodOfWorkInHours;
@@ -66,19 +65,25 @@ public class TestGraphGenerator implements GraphGenerator {
 		// To hold fair graph of work
 		List<TimeCell> fairGraphOfWork = new ArrayList<>();
 		
-		long numberOfIntervalsToGenerate = Duration.between(start, end).toHours()/nunimumPeriodOfWorkInHours;
+		long numberOfIntervalsToGenerate = (Duration.between(start, end).toHours() + 1)/nunimumPeriodOfWorkInHours;
 
+		try {
 		// Fills up fair graph of work
-		for (long i = 0; i < numberOfIntervalsToGenerate; i += nunimumPeriodOfWorkInHours) {
-			try {
-				fairGraphOfWork.add(new TimeCell(start.plusHours(i), start.plusHours(i + nunimumPeriodOfWorkInHours), LocalDateTime.now(),
-						creator, null, TypeOfWork.ANY));
+		for (long i = 0; i < numberOfIntervalsToGenerate; i ++ ) {
+
+				fairGraphOfWork.add(new TimeCell(
+						start.plusHours(i*nunimumPeriodOfWorkInHours),
+						start.plusHours((i+1)*nunimumPeriodOfWorkInHours),
+						LocalDateTime.now(),
+						creator,
+						null,
+						TypeOfWork.ANY));
+		}
 			} catch (EndBeforeStartException ex) {
 				Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
 			} catch (ZeroLengthException ex) {
 				Logger.getLogger(TimeManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
 		return fairGraphOfWork;
 	}
 

@@ -21,7 +21,7 @@ package timemanager.graphGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 import timemanager.TimeCell;
-import timemanager.actors.Manager;
+import timemanager.actors.Person;
 import timemanager.actors.Person;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;

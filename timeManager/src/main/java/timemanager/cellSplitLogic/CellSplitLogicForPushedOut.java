@@ -10,7 +10,7 @@ import timemanager.TimeCellSpliterationResult;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 
-public class CellSplitLogicForPushedOut implements CellSplitLogic {
+public class CellSplitLogicForPushedOut implements Logic {
     
     @Override
     public TimeCellSpliterationResult split(TimeCell cellToInsert, TimeCell replacedCell)

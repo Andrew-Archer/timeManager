@@ -22,15 +22,14 @@ import timemanager.exceptions.ZeroLengthException;
  *
  * @author razan
  */
-public class CellSplitLogicForWorkRequestTest {
+public class PushingOutLogicTest {
     //Creating TimeCells to compare
     private List<TimeCell> listToCompare = new ArrayList<>();
     private TimeCell cellToInsert;
-    private CellSplitLogicForWorkRequest splitLogic = new CellSplitLogicForWorkRequest();
+    private PushingOutLogic splitLogic = new PushingOutLogic();
     private List<TimeCellSpliterationResult> splitResults = new ArrayList<>();
 
-    public CellSplitLogicForWorkRequestTest() throws
-            EndBeforeStartException,
+    public CellSplitLogicForWorkRequePushingOutLogicTesteforeStartException,
             ZeroLengthException {
         
         LocalDateTime startOfCellToInsert = LocalDateTime.of(2017, 02, 1, 0, 0, 0, 0);
@@ -111,7 +110,7 @@ public class CellSplitLogicForWorkRequestTest {
     }
 
     /**
-     * Test of split method, of class CellSplitLogicForWorkRequest.
+     * Test of split method, of class PushingOutLogic.
      * @throws java.lang.Exception
      */
     @Test

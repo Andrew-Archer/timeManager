@@ -13,12 +13,12 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import timemanager.actors.Manager;
 import timemanager.actors.Worker;
-import timemanager.cellSplitLogic.CellSplitLogic;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 import timemanager.graphGenerator.GraphGenerator;
 import timemanager.graphGenerator.TestGraphGenerator;
 import timemanager.validation.PeriodValidator;
+import timemanager.cellSplitLogic.Logic;
 
 /**
  *
@@ -114,11 +114,11 @@ public class TimeManagerTest {
         
         //Set expected result
         List<TimeCell> expResult = new ArrayList<>();
-        for (int i = 0; i < lenghtOfGraph; i += minimumDuration){
+        for (int i = 0; i < lenghtOfGraph/minimumDuration; i ++){
             expResult.add(new TimeCell(
-                start.plusHours(i),
-                start.plusHours(minimumDuration+i),
-                result.get(1).getCreationTime(),
+                start.plusHours(i*minimumDuration),
+                start.plusHours((1+i)*minimumDuration),
+                result.get(i).getCreationTime(),
                 creator,
                 null,
                 TypeOfWork.ANY));

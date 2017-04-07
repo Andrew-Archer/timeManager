@@ -6,7 +6,7 @@ import timemanager.TypeOfWork;
 import timemanager.actors.Manager;
 import timemanager.actors.Worker;
 import timemanager.cellSplitLogic.CellSplitLogicForPushedOut;
-import timemanager.cellSplitLogic.CellSplitLogicForWorkRequest;
+import timemanager.cellSplitLogic.PushingOutLogic;
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 import timemanager.graphGenerator.TestGraphGenerator;
@@ -48,10 +48,9 @@ public class RunMeIamTheDemo {
                 System.out.println("Cell to insert =========================\n");
 		
                 //inserts cell into graph
-		timeManager.splitTimeCells(
-				timeCellToInsert,
+		timeManager.splitTimeCells(timeCellToInsert,
 				null,
-				new CellSplitLogicForWorkRequest(),
+				new PushingOutLogic(),
 				new CellSplitLogicForPushedOut());
 		
 		System.out.println("Generated fair graph after insertion =========================");

@@ -7,20 +7,21 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import timemanager.actors.Manager;
+
 
 import timemanager.actors.Person;
-import timemanager.actors.Worker;
+
 import timemanager.exceptions.EndBeforeStartException;
 import timemanager.exceptions.ZeroLengthException;
 
-public class TimeCell implements Comparable<TimeCell>, Cloneable {
+public class TimeCell implements Comparable<TimeCell>{
 
     private LocalDateTime start;
     private LocalDateTime end;
     private LocalDateTime creationTime;
-    private Manager creator;
-    private Worker executor = null;
+    private Person creator;
+    private Person pushedBy;
+    private Person executor = null;
     private TypeOfWork typeOfWork = TypeOfWork.ANY;
     
     public TimeCell(
@@ -35,6 +36,28 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
                 original.getCreator(),
                 original.getExecutor(),
                 original.getTypeOfWork());
+    }
+    
+    /**
+     * Extracts {@code TimeCell}s with given {@code Worker} from listOfTimeCells.
+     * @param anExecutor 
+     * {@code Worker} must fit {@code Worker} of {@code TimeCell} in listOfTimeCells.
+     * @return {@code TimeCell}s list for given {@code Worker} or nor assigned
+     * sorted by start time.
+     */
+    public List<TimeCell> getTimeCellsAssignedTo(List<TimeCell> graphToSearch) {
+        List<TimeCell> result = new ArrayList<>();
+        //time cell executor can be null so you may get null pointer exception
+        for (TimeCell timeCell : graphToSearch) {
+            if (timeCell.isNotAssigned()) {
+                result.add(timeCell);
+            }else if(timeCell.getExecutor().equals(this.getExecutor())){
+                result.add(timeCell);
+            }
+        }
+        graphToSearch.removeAll(result);
+        result.sort(null);
+        return result;
     }
 
     /**
@@ -61,17 +84,7 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
        return Duration.between(getStart(), getEnd());
     }
 
-    @Override
-    protected TimeCell clone() throws CloneNotSupportedException {
-        TimeCell clone = (TimeCell)super.clone();
-        clone.start = start;
-        clone.end = end;
-        clone.creationTime = creationTime;
-        clone.creator = creator.clone();
-        clone.executor = executor.clone();
-        clone.typeOfWork = typeOfWork;
-        return clone;
-    }
+
     
     
 
@@ -150,7 +163,7 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
     public TimeCell(
             LocalDateTime aStart,
             LocalDateTime anEnd,
-            Manager aCreator) throws
+            Person aCreator) throws
             EndBeforeStartException,
             ZeroLengthException {
         this(
@@ -165,7 +178,7 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
     public TimeCell(
             LocalDateTime aStart,
             LocalDateTime anEnd,
-            Manager aCreator,
+            Person aCreator,
             TypeOfWork aTypeOfWork) throws
             EndBeforeStartException,
             ZeroLengthException {
@@ -207,9 +220,10 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
             LocalDateTime aStart,
             LocalDateTime anEnd,
             LocalDateTime aCreationTime,
-            Manager aCreator,
-            Worker anExecutor,
-            TypeOfWork aTypeOfWork) throws
+            Person aCreator,
+            Person anExecutor,
+            TypeOfWork aTypeOfWork,
+            Person aPushedBy) throws
             EndBeforeStartException,
             ZeroLengthException {
 
@@ -224,7 +238,28 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
             creator = aCreator;
             executor = anExecutor;
             typeOfWork = aTypeOfWork;
+            pushedBy = aPushedBy;
         }
+    }
+    
+    public TimeCell(
+            LocalDateTime aStart,
+            LocalDateTime anEnd,
+            LocalDateTime aCreationTime,
+            Person aCreator,
+            Person anExecutor,
+            TypeOfWork aTypeOfWork) throws
+            EndBeforeStartException,
+            ZeroLengthException {
+
+        this(
+                aStart,
+                anEnd,
+                aCreationTime,
+                aCreator,
+                anExecutor,
+                aTypeOfWork,
+                null);
     }
 
     public TimeCell(
@@ -243,12 +278,15 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
                 aTimeCell.getTypeOfWork());
     }
 
+    public boolean isPushedOut(){
+        return getPushedBy()!=null;
+    }
     public boolean isAssigned(){
-        return !(executor == null);
+        return getExecutor() != null;
     }
     
     public boolean isNotAssigned(){
-        return executor == null;
+        return getExecutor() == null;
     }
     
     @Override
@@ -373,28 +411,28 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
     /**
      * @return the creator
      */
-    public Manager getCreator() {
+    public Person getCreator() {
         return creator;
     }
 
     /**
      * @param creator the creator to set
      */
-    public void setCreator(Manager creator) {
+    public void setCreator(Person creator) {
         this.creator = creator;
     }
 
     /**
      * @return the executor
      */
-    public Worker getExecutor() {
+    public Person getExecutor() {
         return executor;
     }
 
     /**
      * @param executor the executor to set
      */
-    public void setExecutor(Worker executor) {
+    public void setExecutor(Person executor) {
         this.executor = executor;
     }
 
@@ -415,6 +453,20 @@ public class TimeCell implements Comparable<TimeCell>, Cloneable {
     @Override
     public int compareTo(TimeCell o) {
         return start.compareTo(o.start);
+    }
+
+    /**
+     * @return the pushedBy
+     */
+    public Person getPushedBy() {
+        return pushedBy;
+    }
+
+    /**
+     * @param pushedBy the pushedBy to set
+     */
+    public void setPushedBy(Person pushedBy) {
+        this.pushedBy = pushedBy;
     }
 
 }

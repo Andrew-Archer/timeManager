@@ -5,6 +5,7 @@
  */
 package timemanager.cellSplitLogic;
 
+import java.util.List;
 import timemanager.TimeCell;
 import timemanager.TimeCellSpliterationResult;
 import timemanager.exceptions.EndBeforeStartException;
@@ -14,7 +15,7 @@ import timemanager.exceptions.ZeroLengthException;
  *
  * @author razan
  */
-public interface CellSplitLogic {
+public interface Logic {
 
     /**
      *
@@ -24,7 +25,7 @@ public interface CellSplitLogic {
      * @throws timemanager.exceptions.EndBeforeStartException
      * @throws timemanager.exceptions.ZeroLengthException
      */
-    public TimeCellSpliterationResult split(
+    public List<TimeCell> split(
             TimeCell cellToInsert,
-            TimeCell replacedCell) throws EndBeforeStartException, ZeroLengthException;
+            List<TimeCell> replacedCell) throws EndBeforeStartException, ZeroLengthException;
 }
